@@ -48,12 +48,14 @@ Like players.get(currentPlayer); -> currentPlayer()
 
 Like places[currentPlayer] -> currentPlayerPosition()
 
-## Remove multiline duplication
+### Remove multiline duplication
 
 places[currentPlayerIndex] = currentPlayerPosition() + roll;
 if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
 
 -> Move(int nbPlaces)
+
+
 
 
 
