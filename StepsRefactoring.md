@@ -31,7 +31,7 @@ if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPla
   <summary>Click to expand</summary>
   <p>
     
-  ## A subtitle
+  **A subtitle**
   
   </p>
 </details>
