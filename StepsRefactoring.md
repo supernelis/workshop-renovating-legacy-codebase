@@ -27,7 +27,10 @@ if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPla
 
 -> Move(int nbPlaces)
 
-## 
+<details>
+  <summary>Click to expand</summary>
+  whatever
+</details>
 
 
 
