@@ -34,7 +34,7 @@ Magic numbers or Strings can be extracted as constants or enums.
 
 Rename currentPlayer to currentPlayerIndex
 
-### Reveal intent by removing micro duplication
+### Reveal intent by removing micro duplications
 
 Like players.get(currentPlayer); -> currentPlayer()
 
