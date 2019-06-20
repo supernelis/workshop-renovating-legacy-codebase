@@ -15,6 +15,7 @@ Some typical quick wins:
 ### Extract magic numbers or Strings
 
 A magic number or string is a value that is used in the code: 1) without clear context or meaning; 2) Used in several places.
+
 **Can you identify such magic numbers and strings?**
 
 Magic numbers or Strings can be extracted as constants or enums. 
@@ -61,7 +62,7 @@ After focussing on revealing intent it is time for the next step.
 
 The guide for the next step is to realise that the Game class tries to cover to many concerns at once. By extracing domain concepts and collaborators covering a specific aspect we can make the code a lot simpler. 
 
-** Can you identify some good candidates for extraction? **
+**Can you identify some good candidates for extraction?**
 
 <details>
   <summary>Click to see an example of a technical concern. </summary>
