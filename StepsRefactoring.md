@@ -44,9 +44,26 @@ Rename currentPlayer to currentPlayerIndex
 
 ### Remove micro duplications
 
-Like players.get(currentPlayer); -> currentPlayer()
+Like 
 
-Like places[currentPlayer] -> currentPlayerPosition()
+*java*
+```java
+players.get(currentPlayer); -> currentPlayerName();
+```
+
+*javascript*
+
+```javascript
+players[currentPlayerIndex]; -> currentPlayerName();
+```
+
+Like
+
+*java* and *javascript*
+
+```
+places[currentPlayer] -> currentPlayerPosition()
+```
 
 ### Remove multiline duplication
 
@@ -73,14 +90,26 @@ The guide for the next step is to realise that the Game class tries to cover to 
   
   The first step towards a reporter is to extract the System.out in a method. 
   
+  *java*
+
   ```java
     private void report(String message) {
         System.out.println(message);
     }
   ```
+
+  *javascript*
+
+  ```javascript
+  function report(message) {
+		console.log(message);
+	}
+  ```
   
   The next step is to create a Reporter class and move the method there. 
   
+*Java*
+
   ```java
     public class Reporter {
       public Reporter() {
@@ -90,8 +119,17 @@ The guide for the next step is to realise that the Game class tries to cover to 
           System.out.println(message);
       }
     }
-    
   ```
+
+*javascript*
+
+```javascript
+module.exports = {
+    report: function(message) {
+        console.log(message);
+    }
+}
+```
   
   And everywhere in the code you will find: 
   
@@ -116,6 +154,7 @@ The guide for the next step is to realise that the Game class tries to cover to 
   
   And in the game class.
   
+ *java* 
   ```java  
     public class Game {
 
@@ -134,17 +173,80 @@ The guide for the next step is to realise that the Game class tries to cover to 
     }
   ```
   
-  
+ *javascript*
+
+ ```javascript
+ module.exports = function (reporter) {
+   ....
+
+  function report(message) {
+		reporter.report(message);
+	}
+ }
+ ```
   
   </p>
 </details>
 
 ### Extract domain objects
 
+#### Player
 
+*javascript*
+
+```javascript
+module.exports = function(name) {
+    this.name = name;
+    this.coins = 0;
+
+    this.addCoin = function(){
+        this.coins += 1;
+    }
+
+    this.hasWon = function() {
+        return this.coins == 6;
+    }
+}
+```
+
+use in `Game``
+
+```javascript
+  const Player = require('./player');
+
+  module.exports = function (reporter) {
+
+    ...
+
+    function currentPlayer() {
+      return players[currentPlayerIndex];
+    }
+
+    function currentPlayerName() {
+      return currentPlayer().name;
+    }
+
+    function currentPlayerCoins() {
+      return currentPlayer().coins;
+    }
+
+    function addCointToCurrentPlayer() {
+      currentPlayer().addCoin();
+    }
+
+    function hasCurrentPlayerWon() {
+      return currentPlayer().hasWon();
+    }
+  }
+```
 
 ## If to MAP
 
+
+## Javascript plugin VSCode
+
+- [Refactoring JavaScript](https://code.visualstudio.com/docs/editor/refactoring)
+- [JS Refactor](https://marketplace.visualstudio.com/items?itemName=cmstead.jsrefactor)
 
 
 
