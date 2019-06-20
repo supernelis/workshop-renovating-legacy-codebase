@@ -11,40 +11,63 @@ The goal of the first part of the workshop is for you to build up an effective g
 
 ## Step: Understand what to observe
 
-The first step in building up an effective golden master is to understand what to observe.
+The first step in building up an effective golden master is to understand what to observe. So lets start with *running the game*.
 
-So lets start with running the game by running the main in GameRunner. Briefly look to the output.
+JAVA: Run the main in GameRunner. Briefly look to the output.
 
-Run the game several times. Briefly look to the GameRunner. 
+JS: **TODO** 
 
-**What do you see that will make it difficult for you to do tests?**
+Run the game several times. Briefly study the code of the GameRunner.
 
-**Which output needs to be captured?**
+***Questions to answer:***
+
+* **What do you see that will make it difficult for you to do tests?**
+* **Which output needs to be captured?**
 
 ## Step: Capture the output
 
-The second thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case? 
+One thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case?
 
-Again java provides a way to capture the console output. The trick is to define your own stream, and overwrite the System.out stream with the one you control. Example below.  
+You can try for yourselve, or look to our examples below.
+
+### Example for Java
+
+Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the System.out stream with the one you control. Typically we add a helper method in a test. So setup: 
 
 
 ```java
 
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintStream printStream = new PrintStream(outputStream, true);
-    
-    PrintStream oldOut = System.out;
-    
-    System.setOut(printStream);
-    
-    runGame(rand);
-    
-    System.setOut(oldOut);
-    System.out.print(outputStream.toString());
+public class GoldenMasterTest {
+
+	@Test
+	public void can_run_a_controlled_game() {
+			String result = runGame();
+
+            System.out.println(result)
+	}
+
+   	public String runGame() {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		PrintStream printStream = new PrintStream(outputStream, true);
+
+		PrintStream oldOut = System.out;
+		System.setOut(printStream);
+		
+		GameRunner.runGame();
+
+		System.setOut(oldOut);
+
+		return outputStream.toString();
+	}
+}
 
 ```
 
 In this example, outputStream.toString() contains the output of our test.
+
+### Example for Javascript
+
+**TODO**
 
 ## Step: Make the tests reproducible
 
