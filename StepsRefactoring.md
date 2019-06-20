@@ -111,8 +111,11 @@ The guide for the next step is to realise that the Game class tries to cover to 
     ...
     
     }
-    
-    
+  ```  
+  
+  And in the game class.
+  
+  ```java  
     public class Game {
 
     ...
