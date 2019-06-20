@@ -1,6 +1,7 @@
 # The road towards an effective golden master
 
 There are several important steps to get towards an effective golden master. 
+
 1. Understand what to observe 
 2. Control randomness
 3. Capture the output
@@ -23,7 +24,7 @@ The GameRunner uses a random nummer generator, causing the output of a run to di
 
 To make a reproducible test, you need to make the randomness controllable in the tests. 
 
-#### Reproducible random
+### Reproducible random
 
 Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time. 
 
@@ -33,7 +34,7 @@ Java provides a way to do this, namely by passing a seed to random. Using this s
     rand.nextInt();                     // will always produce the exact same result
 ```
 
-#### Use reproducible random
+### Use reproducible random
 
 To allow running the game with such controlled randomGenerator we must extract a runGame in the gameRunner with an 
 random number generator as parameter
@@ -89,9 +90,10 @@ In this example, outputStream.toString() contains the output of our test.
 
 As we now have a reproducible output to compare, we still need to do the actual comparison. We could write something ourselves, but actually there is a great tool to use in this context called [Approval Tests](http://approvaltests.com/). 
 
-The essense of ApprovalTests is that it will keep track of golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version. 
+The essense of ApprovalTests is that it will keep track of golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version.
 
 The simplest way is to add a simple verify step:
+
 ```java
 	@Test
 	public void can_run_a_controlled_game() {
@@ -100,6 +102,7 @@ The simplest way is to add a simple verify step:
 			Approvals.verify(result);
 	}
 ```
+
 On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can copy the content from the received file to the approved file and run the test again (should produce a green result). 
 
 ## Step: Check the quality of your tests
@@ -109,7 +112,7 @@ Now we have a golden master test we still need to check if it is effective:
 * We can check the code coverage.
 * We can use mutation testing to verify if all possibilities are considered.
 
-#### Check the code coverage 
+### Check the code coverage 
 
 Run your tests with code coverage and check which parts are covered.
 
@@ -120,7 +123,7 @@ TODO: ensure we can also do this with maven.
 
 TODO: full code coverage is step 1.
 
-#### Use mutation testing
+### Use mutation testing
 
 The idea behind the mutation testing is that the mutation testing tool produces mutants (i.e. versions of your code with changes) that need to be killed by the tests (i.e. make the tests fail). Every mutant that survives might indicate to a test that insufficiently covers such case. 
 
@@ -141,10 +144,10 @@ If you open the browser and go to: the html report `target/pit-reports/<a date h
 #### Study the mutants that survived or pieces not covered
 
 Often mutants that survive fall on the following categories:
+
 * Unused code
 * Needs more multiple users and seeds to be covered (more variation)
-* 
-
+* ...
 
 ## Step: Add a test for multiple seeds
 
@@ -173,7 +176,3 @@ Often mutants that survive fall on the following categories:
 		CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
 	}
 ```
-
-
-
- 
