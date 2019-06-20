@@ -55,6 +55,12 @@ if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPla
 
 -> Move(int nbPlaces)
 
+## Inject your dependencies
+
+## Extract domain object: Player?
+---
+## If to MAP
+
 
 
 
