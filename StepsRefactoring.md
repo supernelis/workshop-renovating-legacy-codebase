@@ -1,10 +1,10 @@
 # Renovating the codebase
 
-## Simple refactorings
+## Reveal intent
 
 Start with some simple things to improve readability
 
-### Extract magic numbers or Strings
+### Reveal intent by extract magic numbers or Strings
 
 A magic number or string is a value that is used in the code: 1) without clear context or meaning; 2) Used in several places.
 **Can you identify such magic numbers and strings?**
@@ -30,11 +30,11 @@ Magic numbers or Strings can be extracted as constants or enums.
 </details>
 
 
-### Simple renames
+### Reveal intent by simple renames
 
 Rename currentPlayer to currentPlayerIndex
 
-### Remove duplication by extracting methods for logic repeated everywhere
+### Reveal intent by removing micro duplication
 
 Like players.get(currentPlayer); -> currentPlayer()
 
