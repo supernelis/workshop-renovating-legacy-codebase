@@ -2,8 +2,14 @@
 
 ## Reveal intent
 
-When renovating a horrible codebase, it is often a good first step to do a series of smaller refactorings to get to know the codebase better, to better reveal the intent as you improve your understanding and to remove some clutter. 
+When renovating a horrible codebase, it is often a good first step to do a series of smaller refactorings to get to know the codebase better, to better reveal the intent as you improve your understanding and to remove some clutter. This is a warmup before starting the heavy lifting.
 
+Some typical quick wins:
+
+* Extract magic numbers or Strings
+* Simple renames
+* Remove micro duplications
+* Remove multiline duplication
 
 
 ### Extract magic numbers or Strings
