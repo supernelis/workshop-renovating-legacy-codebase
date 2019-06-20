@@ -2,9 +2,11 @@
 
 ## Reveal intent
 
-Start with some simple things to improve readability
+When renovating a horrible codebase, it is often a good first step to do a series of smaller refactorings to get to know the codebase better, to better reveal the intent as you improve your understanding and to remove some clutter. 
 
-### Reveal intent by extract magic numbers or Strings
+
+
+### Extract magic numbers or Strings
 
 A magic number or string is a value that is used in the code: 1) without clear context or meaning; 2) Used in several places.
 **Can you identify such magic numbers and strings?**
@@ -30,11 +32,11 @@ Magic numbers or Strings can be extracted as constants or enums.
 </details>
 
 
-### Reveal intent by simple renames
+### Simple renames
 
 Rename currentPlayer to currentPlayerIndex
 
-### Reveal intent by removing micro duplications
+### Remove micro duplications
 
 Like players.get(currentPlayer); -> currentPlayer()
 
