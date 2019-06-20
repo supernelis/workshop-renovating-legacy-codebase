@@ -1,12 +1,13 @@
 # The road towards an effective golden master
 
-There are several important steps to get towards an effective golden master. 
+The goal of the first part of the workshop is for you to build up an effective golden master. There are several important steps to get there.
 
-1. Understand what to observe 
-2. Control randomness
-3. Capture the output
-4. Comparing with the golden master
-5. Check if the golden master is effective 
+1. Understand what to observe
+2. Capture the output
+3. Make the tests reproducible
+4. Verify the result with a golden master
+5. Check if the golden master is effective
+6. Add more variations
 
 ## Step: Understand what to observe
 
@@ -18,7 +19,34 @@ Run the game several times. Briefly look to the GameRunner.
 
 **What do you see that will make it difficult for you to do tests?**
 
-## Step: Control the randomness
+**Which output needs to be captured?**
+
+## Step: Capture the output
+
+The second thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case? 
+
+Again java provides a way to capture the console output. The trick is to define your own stream, and overwrite the System.out stream with the one you control. Example below.  
+
+
+```java
+
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(outputStream, true);
+    
+    PrintStream oldOut = System.out;
+    
+    System.setOut(printStream);
+    
+    runGame(rand);
+    
+    System.setOut(oldOut);
+    System.out.print(outputStream.toString());
+
+```
+
+In this example, outputStream.toString() contains the output of our test.
+
+## Step: Make the tests reproducible
 
 The GameRunner uses a random nummer generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. 
 
@@ -61,30 +89,7 @@ Now we can make a new test that uses a random generator with a seed
 
 It is not a real test yet (no asserts yet), but at least it allows us to easily run with a reproducible output. 
 
-## Step: Control the output stream
 
-The second thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case? 
-
-Again java provides a way to capture the console output. The trick is to define your own stream, and overwrite the System.out stream with the one you control. Example below.  
-
-
-```
-
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PrintStream printStream = new PrintStream(outputStream, true);
-    
-    PrintStream oldOut = System.out;
-    
-    System.setOut(printStream);
-    
-    runGame(rand);
-    
-    System.setOut(oldOut);
-    System.out.print(outputStream.toString());
-
-```
-
-In this example, outputStream.toString() contains the output of our test.
 
 ## Step: Add ApprovalTests to verify
 
