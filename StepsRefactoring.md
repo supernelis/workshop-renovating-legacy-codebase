@@ -55,7 +55,93 @@ if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPla
 
 -> Move(int nbPlaces)
 
-## Inject your dependencies
+## Extract collaborators
+
+After focussing on revealing intent it is time for the next step.
+
+The guide for the next step is to realise that the Game class tries to cover to many concerns at once. By extracing domain concepts and collaborators covering a specific aspect we can make the code a lot simpler. 
+
+** Can you identify some good candidates for extraction? **
+
+<details>
+  <summary>Click to see an example of a technical concern. </summary>
+  <p>
+    
+  Everywhere in the code the output is written directly to the console (System.out in Java). This makes it hard in our test (remember the setOut in the Golden Master), but also makes it pretty to use this in the context of a website or mobile application. Extracting a reporter that reports about what happens in the game would be a big step forward. 
+  
+  The first step towards a reporter is to extract the System.out in a method. 
+  
+  ```java
+    private void report(String message) {
+        System.out.println(message);
+    }
+  ```
+  
+  The next step is to create a Reporter class and move the method there. 
+  
+  ```java
+    public class Reporter {
+      public Reporter() {
+      }
+
+      void report(String message) {
+          System.out.println(message);
+      }
+    }
+    
+  ```
+  
+  And everywhere in the code you will find: 
+  
+  ```java
+    reporter.report(...);
+  ```
+  
+  Next we ensure the dependencies are properly injected: 
+  
+  ```java 
+    public class Reporter {
+
+      private PrintStream stream;
+
+      public Reporter(PrintStream stream) {
+          this.stream = stream;
+      }
+    ...
+    
+    }
+    
+    
+    public class Game {
+
+    ...
+
+    private final Reporter reporter;
+
+   ...
+
+    public Game(Reporter reporter) {
+        ...
+        this.reporter = reporter;
+    }
+    ...
+    
+    }
+  ```
+  
+  
+  
+  </p>
+</details>
+
+
+
+
+
+
+Inject your dependencies
+
+
 
 ## Extract domain object: Player?
 ---
