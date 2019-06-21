@@ -36,7 +36,6 @@ Java provides a way to capture the console output. The trick is to define your o
 
 
 ```java
-
 public class GoldenMasterTest {
 
 	@Test
@@ -78,31 +77,29 @@ The GameRunner uses a random nummer generator, causing the output of a run to di
 Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time. 
 
 ```java
-    int seed = 1;                       // a seed for the random generator
-    Random rand = new Random(seed);
-    rand.nextInt();                     // will always produce the exact same result
+int seed = 1;                       // a seed for the random generator
+Random rand = new Random(seed);
+rand.nextInt();                     // will always produce the exact same result
 ```
 
 To allow running the game with such controlled randomGenerator we must extract a runGame in the gameRunner with a random number generator as parameter.
 
 ```java
-    public static void runGame(Random rand) { ... }
+public static void runGame(Random rand) { ... }
 ```
 
 Now we can make a new test that uses a random generator with a seed
 
 ```java
+public class GoldenMasterTests {
 
-    public class GoldenMasterTests {
-    
-        @Test
-        public void can_run_with_reproducible_output() {
-                Random rand = new Random(1);
-    
-                runGame(rand);
-        } 
-    }
-    
+	@Test
+	public void can_run_with_reproducible_output() {
+			Random rand = new Random(1);
+
+			runGame(rand);
+	} 
+}
 ```
 
 It is not a real test yet (no asserts yet), but at least it allows us to easily run with a reproducible output. 
@@ -120,12 +117,12 @@ The essense of ApprovalTests is that it will keep track of golden master (called
 The simplest way is to add a simple verify step.
 In java:
 ```java
-	@Test
-	public void can_run_a_controlled_game() {
-			String result = runGame(1);
+@Test
+public void can_run_a_controlled_game() {
+		String result = runGame(1);
 
-			Approvals.verify(result);
-	}
+		Approvals.verify(result);
+}
 ```
 
 In Javascript: 
@@ -207,21 +204,21 @@ But before we reach that point, we need to make the players can be injected thro
 
 ```java
 private class Players {
-		private String[] players;
+	private String[] players;
 
-		public Players(String ... players) {
-			this.players = players;
-		}
-
-		public String[] values() {
-			return players;
-		}
-
-		@Override
-		public String toString() {
-			return String.join(",", players);
-		}
+	public Players(String ... players) {
+		this.players = players;
 	}
+
+	public String[] values() {
+		return players;
+	}
+
+	@Override
+	public String toString() {
+		return String.join(",", players);
+	}
+}
 
 public String runGameForSeedAndPlayers(Integer seed, Players players) {
 	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
