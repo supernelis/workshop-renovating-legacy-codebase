@@ -253,6 +253,39 @@ use in `Game``
 
 ## If to MAP
 
+<details>
+  <summary>Click to see an example of a technical concern. </summary>
+  <p>
+
+*javascript*
+
+```javascript
+    const categoryForPosition = new Map();
+    categoryForPosition.set(0, Category.POP);
+    categoryForPosition.set(1, Category.SCIENCE);
+    categoryForPosition.set(2, Category.SPORTS);
+    categoryForPosition.set(3, Category.ROCK);
+
+    var currentCategory = function () {
+        const nbCategories = Object.keys(Category).length;
+        const scaledPosition = places[currentPlayerIndex] % nbCategories;
+        return categoryForPosition.get(scaledPosition);
+    };
+```
+
+you can also replace the Map with an algorithm.
+
+```javascritp
+  var currentCategory = function () {
+		const nbCategories = Object.keys(Category).length;
+		const scaledPosition = places[currentPlayerIndex] % nbCategories
+		return Category[Object.keys(Category)[scaledPosition]];
+	};
+```
+
+  </p>
+</details>
+
 
 ## Javascript plugin VSCode
 
