@@ -33,6 +33,17 @@ Magic numbers or Strings can be extracted as constants or enums.
   <p>
     
   Like POP, SCIENCE, SPORT, ROCK to an enum QuestionCategorie
+
+  *javascript*
+
+  ```javascript
+  module.exports = Object.freeze({
+    "POP": "Pop",
+    "SCIENCE": "Science",
+    "SPORTS": "Sports",
+    "ROCK": "Rock"
+  });
+  ```
   
   </p>
 </details>
