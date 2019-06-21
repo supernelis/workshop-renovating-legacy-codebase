@@ -136,49 +136,54 @@ On the first run the test will still fail, as it lacks an approved version with 
 
 ## Step: Check the quality of your tests
 
-Now we have a golden master test we still need to check if it is effective:
+Now we have a golden master test we still need to check if it is effective. For this we are mainly intested in the Game class. This is done in two steps:
 
-* We can check the code coverage.
-* We can use mutation testing to verify if all possibilities are considered.
+* Check the code coverage.
+* Use mutation testing
 
 ### Check the code coverage 
 
 Run your tests with code coverage and check which parts are covered.
 
-In IntelliJ you can enable a more advanced tracking of code coverage by enabling tracing. 
-Click on your build configuration for test -> Edit Configuration -> Code coverage Tab -> Tracing 
+*Java/IntelliJ* users can enable a more advanced tracking of code coverage by enabling tracing. By using tracing it also looks if all possible branches in an if are considered.
+ 
+Click on your build configuration for test -> Edit Configuration -> Code coverage Tab -> Tracing.
 
-TODO: ensure we can also do this with maven.
+*Java/Maven* is another possibility that we configured for you. We use a maven plugin for this. Please execute the following command:
 
-TODO: full code coverage is step 1.
+```bash
+mvn clean test jacoco:report
+```
+
+Next you can open the file `target/site/jacoco/index.html` containing the coverage report.
+
+*Javascript* **TODO**
+
+**Which parts of the code are not coverd yet? Why?** 
 
 ### Use mutation testing
 
-The idea behind the mutation testing is that the mutation testing tool produces mutants (i.e. versions of your code with changes) that need to be killed by the tests (i.e. make the tests fail). Every mutant that survives might indicate to a test that insufficiently covers such case. 
+The idea behind the mutation testing is that the mutation testing tool produces mutants (i.e. versions of your code with changes) that need to be killed by the tests (i.e. make the tests fail). Every mutant that survives might indicate to a test that insufficiently covers such case.
 
 We already configured maven to run the mutation testing easily. To check if maven is working well:
 
 ```bash
-$ mvn clean test
-```
-
-Running the mutation tests itself
-
-```bash
-$ mvn -DwithHistory org.pitest:pitest-maven:mutationCoverage
+mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
 ```
 
 If you open the browser and go to: the html report `target/pit-reports/<a date here>/index.html`
 
-#### Study the mutants that survived or pieces not covered
+**Which mutants survived? Why?**
 
-Often mutants that survive fall on the following categories:
+### Some hints
 
-* Unused code
+Often uncovered parts or mutants that survive fall on the following categories:
+
+* Dead code (code that is not used)
+* Code that is not covered by tests
 * Needs more multiple users and seeds to be covered (more variation)
-* ...
 
-## Step: Add a test for multiple seeds
+## Step: Add more variation in the golden master
 
 ```java
 	@Test

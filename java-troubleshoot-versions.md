@@ -1,0 +1,2 @@
+jenv enable-plugin maven
+
