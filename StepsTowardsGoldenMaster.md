@@ -71,11 +71,9 @@ In this example, outputStream.toString() contains the output of our test.
 
 ## Step: Make the tests reproducible
 
-The GameRunner uses a random nummer generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. 
+The GameRunner uses a random nummer generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
 
-To make a reproducible test, you need to make the randomness controllable in the tests. 
-
-### Reproducible random
+### Control randomness in Java
 
 Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time. 
 
@@ -85,10 +83,7 @@ Java provides a way to do this, namely by passing a seed to random. Using this s
     rand.nextInt();                     // will always produce the exact same result
 ```
 
-### Use reproducible random
-
-To allow running the game with such controlled randomGenerator we must extract a runGame in the gameRunner with an 
-random number generator as parameter
+To allow running the game with such controlled randomGenerator we must extract a runGame in the gameRunner with a random number generator as parameter.
 
 ```java
     public static void runGame(Random rand) { ... }
@@ -112,26 +107,32 @@ Now we can make a new test that uses a random generator with a seed
 
 It is not a real test yet (no asserts yet), but at least it allows us to easily run with a reproducible output. 
 
+### Control randomness in Javascript
 
+**TODO**
 
-## Step: Add ApprovalTests to verify
+## Step: Verify the result with a golden master
 
 As we now have a reproducible output to compare, we still need to do the actual comparison. We could write something ourselves, but actually there is a great tool to use in this context called [Approval Tests](http://approvaltests.com/). 
 
 The essense of ApprovalTests is that it will keep track of golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version.
 
-The simplest way is to add a simple verify step:
-
+The simplest way is to add a simple verify step.
+In java:
 ```java
 	@Test
 	public void can_run_a_controlled_game() {
-			String result = runGame(2);
+			String result = runGame(1);
 
 			Approvals.verify(result);
 	}
 ```
 
-On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can copy the content from the received file to the approved file and run the test again (should produce a green result). 
+In Javascript: 
+
+**TODO**
+
+On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can rename the received file to the approved file and run the tests again.
 
 ## Step: Check the quality of your tests
 
