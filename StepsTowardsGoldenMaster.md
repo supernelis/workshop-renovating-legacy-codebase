@@ -181,32 +181,88 @@ Often uncovered parts or mutants that survive fall on the following categories:
 
 * Dead code (code that is not used)
 * Code that is not covered by tests
-* Needs more multiple users and seeds to be covered (more variation)
+* Needs more multiple users and seeds to be covered (more variation). The next section provides some tips to add more variation.
 
-## Step: Add more variation in the golden master
+## Step: Add more variation in the golden master test
+
+There are two ways to add more variation in the golden master tests. You can add more seeds and you can add more players, and you can combine the two.
+
+### Java
+
+To add multiple seeds you can use `Approvals.verifyAll()` where you can indicate you want to run re-run the test for each of the seeds.
 
 ```java
-	@Test
-	public void can_run_controlled_game_for_multiple_seeds() {
-		Integer[] seeds = {1,2};
+@Test
+public void can_run_controlled_game_for_multiple_seeds() {
+	Integer[] seeds = {1,2};
 
-		Approvals.verifyAll(seeds,seed -> runGame(seed));
-	}
+	Approvals.verifyAll(seeds,seed -> runGame(seed));
+}
 
 ```
 
-## Step: Control the players and verify combinations of players and seeds
+To add multiple players and multiple seeds, you can use yet another trick, namely `Approvals.verifyAllCombinations`.
+
+But before we reach that point, we need to make the players can be injected through code. An example on how to do that below.
 
 ```java
-    @Test
-	public void can_run_controlled_game_for_multiple_players() throws Exception {
-		Integer[] seeds = {3,7};
-		String[][] playerCombinations = {
-				{"Chet"},
-				{"Chet", "Jean"},
-				
-		};
+private class Players {
+		private String[] players;
 
-		CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
+		public Players(String ... players) {
+			this.players = players;
+		}
+
+		public String[] values() {
+			return players;
+		}
+
+		@Override
+		public String toString() {
+			return String.join(",", players);
+		}
 	}
+
+public String runGameForSeedAndPlayers(Integer seed, Players players) {
+	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	PrintStream printStream = new PrintStream(outputStream, true);
+
+	PrintStream oldOut = System.out;
+	System.setOut(printStream);
+
+	Random rand = new Random(seed);
+	GameRunner.runGame(rand, players.players);
+
+	System.setOut(oldOut);
+
+	return outputStream.toString();
+}
 ```
+
+Finally we are ready to try with adding multiple combinations. 
+
+```java
+
+@Test
+public void can_run_controlled_game_for_multiple_players() throws Exception {
+	Integer[] seeds = {1,2};
+	String[][] playerCombinations = {
+			{"Chet"},
+			{"Chet", "Jean"},
+			
+	};
+
+	CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
+}
+```
+
+**Play a bit with the combinations until you get most mutants killed.**
+
+<details>
+  <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
+  <p>
+
+  Through experimentation and studying the code we found that the combination of the seeds 3 and 7 for java and from 0 till 6 players kills the maximal amount of mutants.
+  
+  </p>
+</details>
