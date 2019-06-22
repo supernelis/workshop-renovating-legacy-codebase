@@ -38,26 +38,26 @@ Java provides a way to capture the console output. The trick is to define your o
 ```java
 public class GoldenMasterTest {
 
-	@Test
-	public void can_run_a_controlled_game() {
-			String result = runGame();
+    @Test
+    public void can_run_a_controlled_game() {
+        String result = runGame();
 
-            System.out.println(result)
-	}
+        System.out.println(result)
+    }
 
-   	public String runGame() {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		PrintStream printStream = new PrintStream(outputStream, true);
+    public String runGame() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream, true);
 
-		PrintStream oldOut = System.out;
-		System.setOut(printStream);
-		
-		GameRunner.runGame();
+        PrintStream oldOut = System.out;
+        System.setOut(printStream);
+        
+        GameRunner.runGame();
 
-		System.setOut(oldOut);
+        System.setOut(oldOut);
 
-		return outputStream.toString();
-	}
+        return outputStream.toString();
+    }
 }
 
 ```
@@ -66,7 +66,31 @@ In this example, outputStream.toString() contains the output of our test.
 
 ### Example for Javascript
 
-**TODO**
+For javascript we do more or less the same as for java. As javascript allows too overwrite any random function, we will use this to overwrite the log function.
+
+```javascript
+
+function runGame(){
+    console.oldLog = console.log;
+    var result = "";
+    console.log = function (value) {
+        result += value + "\n";
+    };
+
+    gameRunner()
+
+    console.log = console.oldLog;
+    return result;
+}
+
+it("should allow to control the output", function() {
+    var result = runGame()
+    console.log("This is the result")
+    console.log(result)
+})
+```
+
+The result comes back from the runGame function. 
 
 ## Step: Make the tests reproducible
 
@@ -95,9 +119,9 @@ public class GoldenMasterTests {
 
     @Test
     public void can_run_with_reproducible_output() {
-            Random rand = new Random(1);
+        Random rand = new Random(1);
 
-            runGame(rand);
+        runGame(rand);
     } 
 }
 ```
@@ -139,9 +163,12 @@ As we now have a reproducible output to compare, we still need to do the actual 
 The essense of ApprovalTests is that it will keep track of golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version.
 
 The simplest way is to add a simple verify step.
-In java:
 
-```java
+<details>
+  <summary>In Java </summary>
+  <p>
+
+ ```java
 @Test
 public void can_run_a_controlled_game() {
     String result = runGame(1);
@@ -149,10 +176,27 @@ public void can_run_a_controlled_game() {
     Approvals.verify(result);
 }
 ```
+  
+  </p>
+</details>
 
-In Javascript: 
+<details>
+  <summary>In Javascript </summary>
+  <p>
 
-**TODO**
+```javascript
+it("should compare the result", function(){
+    initialiseRandom(1);
+    var result = runGame()
+
+    this.verify(result, { reporters: ["donothing"] });
+})
+```
+
+TIP for javascript: you can select an automated mere tool by changing the [reporter](https://github.com/approvals/Approvals.NodeJS#reporters).
+  
+  </p>
+</details>
 
 On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can rename the received file to the approved file and run the tests again.
 
@@ -163,15 +207,28 @@ Now we have a golden master test we still need to check if it is effective. For 
 * Check the code coverage.
 * Use mutation testing
 
-### Check the code coverage 
+### Check the code coverage
 
 Run your tests with code coverage and check which parts are covered.
 
-*Java/IntelliJ* users can enable a more advanced tracking of code coverage by enabling tracing. By using tracing it also looks if all possible branches in an if are considered.
+<details>
+  <summary>Java/IntelliJ</summary>
+  <p>
+
+ Enable a more advanced tracking of code coverage by enabling tracing. 
  
 Click on your build configuration for test -> Edit Configuration -> Code coverage Tab -> Tracing.
 
-*Java/Maven* is another possibility that we configured for you. We use a maven plugin for this. Please execute the following command:
+Now run the coverage report of InteliJ
+
+</p>
+</details>
+
+<details>
+  <summary>Java/Maven</summary>
+  <p>
+
+ Using commandline maven is another possibility that we configured for you. We use a maven plugin for this. Please execute the following command:
 
 ```bash
 mvn clean test jacoco:report
@@ -179,7 +236,19 @@ mvn clean test jacoco:report
 
 Next you can open the file `target/site/jacoco/index.html` containing the coverage report.
 
-*Javascript* **TODO**
+</p>
+</details>
+
+<details>
+  <summary> Javascript</summary>
+  <p>
+
+We configured `npm test` to also produce a coverage report. 
+
+Next you can open the file at `coverage/index.html`
+
+</p>
+</details>
 
 **Which parts of the code are not coverd yet? Why?** 
 
@@ -187,13 +256,21 @@ Next you can open the file `target/site/jacoco/index.html` containing the covera
 
 The idea behind the mutation testing is that the mutation testing tool produces mutants (i.e. versions of your code with changes) that need to be killed by the tests (i.e. make the tests fail). Every mutant that survives might indicate to a test that insufficiently covers such case.
 
-We already configured maven to run the mutation testing easily. To check if maven is working well:
+We already configured maven to run the mutation testing easily. 
 
 ```bash
 mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
 ```
 
 If you open the browser and go to: the html report `target/pit-reports/<a date here>/index.html`
+
+We also configured npm to run mutation tests.
+
+```bash 
+npm run mutation-test
+```
+
+The report can be found on `reports/mutation/html/index.html`.
 
 **Which mutants survived? Why?**
 
@@ -216,9 +293,9 @@ To add multiple seeds you can use `Approvals.verifyAll()` where you can indicate
 ```java
 @Test
 public void can_run_controlled_game_for_multiple_seeds() {
-	Integer[] seeds = {1,2};
+    Integer[] seeds = {1,2};
 
-	Approvals.verifyAll(seeds,seed -> runGame(seed));
+    Approvals.verifyAll(seeds,seed -> runGame(seed));
 }
 
 ```
@@ -229,35 +306,35 @@ But before we reach that point, we need to make the players can be injected thro
 
 ```java
 private class Players {
-	private String[] players;
+    private String[] players;
 
-	public Players(String ... players) {
-		this.players = players;
-	}
+    public Players(String ... players) {
+        this.players = players;
+    }
 
-	public String[] values() {
-		return players;
-	}
+    public String[] values() {
+        return players;
+    }
 
-	@Override
-	public String toString() {
-		return String.join(",", players);
-	}
+    @Override
+    public String toString() {
+        return String.join(",", players);
+    }
 }
 
 public String runGameForSeedAndPlayers(Integer seed, Players players) {
-	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	PrintStream printStream = new PrintStream(outputStream, true);
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(outputStream, true);
 
-	PrintStream oldOut = System.out;
-	System.setOut(printStream);
+    PrintStream oldOut = System.out;
+    System.setOut(printStream);
 
-	Random rand = new Random(seed);
-	GameRunner.runGame(rand, players.players);
+    Random rand = new Random(seed);
+    GameRunner.runGame(rand, players.players);
 
-	System.setOut(oldOut);
+    System.setOut(oldOut);
 
-	return outputStream.toString();
+    return outputStream.toString();
 }
 ```
 
@@ -267,14 +344,14 @@ Finally we are ready to try with adding multiple combinations.
 
 @Test
 public void can_run_controlled_game_for_multiple_players() throws Exception {
-	Integer[] seeds = {1,2};
-	String[][] playerCombinations = {
-			{"Chet"},
-			{"Chet", "Jean"},
-			
-	};
+    Integer[] seeds = {1,2};
+    String[][] playerCombinations = {
+            {"Chet"},
+            {"Chet", "Jean"},
+            
+    };
 
-	CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
+    CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
 }
 ```
 
