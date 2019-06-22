@@ -74,7 +74,7 @@ The GameRunner uses a random nummer generator, causing the output of a run to di
 
 ### Control randomness in Java
 
-Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time. 
+Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time.
 
 ```java
 int seed = 1;                       // a seed for the random generator
@@ -93,12 +93,12 @@ Now we can make a new test that uses a random generator with a seed
 ```java
 public class GoldenMasterTests {
 
-	@Test
-	public void can_run_with_reproducible_output() {
-			Random rand = new Random(1);
+    @Test
+    public void can_run_with_reproducible_output() {
+            Random rand = new Random(1);
 
-			runGame(rand);
-	} 
+            runGame(rand);
+    } 
 }
 ```
 
@@ -106,7 +106,31 @@ It is not a real test yet (no asserts yet), but at least it allows us to easily 
 
 ### Control randomness in Javascript
 
-**TODO**
+As javascript allows too overwrite any random function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
+
+```javascript
+var seed = 1;
+Math.random = function () {
+  var x = Math.sin(seed++) * 10000;
+  return x - Math.floor(x);
+}
+```
+
+To integrate this in your code, you can do something like this:
+
+```javascript
+function initialiseRandom(seed) {
+    Math.random = function () {
+        var x = Math.sin(seed++) * 10000;
+        return x - Math.floor(x);
+    }
+}
+
+it("should control the randomness", function(){
+    initialiseRandom(1);
+    expect(Math.floor(Math.random() * 6)).to.eq(4)
+});
+```
 
 ## Step: Verify the result with a golden master
 
@@ -116,12 +140,13 @@ The essense of ApprovalTests is that it will keep track of golden master (called
 
 The simplest way is to add a simple verify step.
 In java:
+
 ```java
 @Test
 public void can_run_a_controlled_game() {
-		String result = runGame(1);
+    String result = runGame(1);
 
-		Approvals.verify(result);
+    Approvals.verify(result);
 }
 ```
 
