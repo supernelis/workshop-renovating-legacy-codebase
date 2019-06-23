@@ -15,7 +15,7 @@ The first step in building up an effective golden master is to understand what t
 
 JAVA: Run the main in GameRunner. Briefly look to the output.
 
-JS: **TODO** 
+JS: Open a node shell in the root of the project and execute the command `require('./src/game-runner')()`. 
 
 Run the game several times. Briefly study the code of the GameRunner.
 
