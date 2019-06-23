@@ -338,7 +338,7 @@ public String runGameForSeedAndPlayers(Integer seed, Players players) {
 }
 ```
 
-Finally we are ready to try with adding multiple combinations. 
+Finally we are ready to try with adding multiple combinations.
 
 ```java
 
