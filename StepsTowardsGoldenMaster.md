@@ -11,13 +11,17 @@ The goal of the first part of the workshop is for you to build up an effective g
 
 ## Step: Understand what to observe
 
-The first step in building up an effective golden master is to understand what to observe. So lets start with *running the game*.
+The first step in building up an effective golden master is to understand what to observe. So lets start with *running the game*. Run the game several times. Briefly study the code of the GameRunner.
 
-JAVA: Run the main in GameRunner. Briefly look to the output.
+*Java* Run the main in GameRunner. Briefly look to the output.
 
-JS: Open a node shell in the root of the project and execute the command `require('./src/game-runner')()`.
+*Javascript*: Run 'npm install' once, then open a node shell in the root of the project and execute gamerunner function. 
 
-Run the game several times. Briefly study the code of the GameRunner.
+```javascript
+$ npm install
+$ node
+> require('./src/game-runner')()
+```
 
 ***Questions to answer:***
 
