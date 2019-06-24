@@ -183,7 +183,9 @@ if (currentPlayerPosition() == 0)
 
 ### Remove multiline duplication by extracting a function
 
-Next it is time to search for multiline duplications and extract them in functions. An example of this is
+Next it is time to search for multiline duplications and extract them in functions. An example of this below. There are several other similar types of duplication, feel free to extract them.
+
+*Java*
 
 ```java
 
@@ -203,13 +205,35 @@ private void move(int roll) {
 
 ```
 
-There are several other similar types of duplication, feel free to extract them.
+*Javascript*
+
+```javascript
+places[currentPlayerIndex] = currentPlayerPosition() + roll;
+if (currentPlayerPosition() >= NB_CELLS) {
+  places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
+}
+```
+
+This can be extracted in 
+
+```javascript
+
+function move(roll) {
+  places[currentPlayerIndex] = currentPlayerPosition() + roll;
+  if (currentPlayerPosition() >= NB_CELLS) {
+    places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
+  }
+}
+
+```
 
 ### Removing multiline duplication by reordening an IF construct
 
 A more advance removal of duplication is to remove duplication by restructuring a complex IF construct.
 
 For example, looking to the roll function you will see the following lines twice:
+
+*Java*
 
 ```java
 move(roll);
@@ -249,6 +273,51 @@ public void roll(int roll) {
   System.out.println("The category is " + currentCategory());
   askQuestion();
 }
+```
+
+*Javascript*
+
+```javascript
+move(roll);
+
+console.log(currentPlayerName() + "'s new location is " + currentPlayerPosition());
+console.log("The category is " + currentCategory());
+askQuestion();
+```
+
+By inverting the nested if condition and adding a return you can remove the duplication. *Ask one of the facilitators to help you with this one*.
+
+The end result will be a simplified roll.
+
+```javascript
+this.roll = function (roll) {
+  console.log(currentPlayerName() + " is the current player");
+  console.log("They have rolled a " + roll);
+
+  function move(roll) {
+    places[currentPlayerIndex] = currentPlayerPosition() + roll;
+    if (currentPlayerPosition() >= NB_CELLS) {
+      places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
+    }
+  }
+
+  if (inPenaltyBox[currentPlayerIndex]) {
+    if (roll % 2 == 0) {
+      console.log(currentPlayerName() + " is not getting out of the penalty box");
+      isGettingOutOfPenaltyBox = false;
+      return;
+    }
+    isGettingOutOfPenaltyBox = true;
+    console.log(currentPlayerName() + " is getting out of the penalty box");
+  }
+
+  move(roll);
+
+  console.log(currentPlayerName() + "'s new location is " + currentPlayerPosition());
+  console.log("The category is " + currentCategory());
+  askQuestion();
+
+};
 ```
 
 ## Extract functionality (from Game class)
