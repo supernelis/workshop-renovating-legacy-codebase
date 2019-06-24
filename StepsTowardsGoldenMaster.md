@@ -42,7 +42,7 @@ public class GoldenMasterTest {
     public void can_run_a_controlled_game() {
         String result = runGame();
 
-        System.out.println(result)
+        System.out.println(result);
     }
 
     public String runGame() {
@@ -115,13 +115,21 @@ public static void runGame(Random rand) { ... }
 Now we can make a new test that uses a random generator with a seed
 
 ```java
+
+
 public class GoldenMasterTests {
+
+    public String runGame(Integer seed) {
+        ...
+        GameRunner.runGame(new Random(seed));
+        ...
+    }
 
     @Test
     public void can_run_with_reproducible_output() {
-        Random rand = new Random(1);
+         String result = runGame(1);
 
-        runGame(rand);
+        System.out.println(result);
     } 
 }
 ```
@@ -219,7 +227,9 @@ Run your tests with code coverage and check which parts are covered.
  
 Click on your build configuration for test -> Edit Configuration -> Code coverage Tab -> Tracing.
 
-Now run the coverage report of InteliJ
+There you also need to add `com.adaptionsoft.games.uglytrivia.*` to the "Packages and classes to include in coverage data".
+
+Now run the coverage report of InteliJ.
 
 </p>
 </details>
@@ -278,9 +288,9 @@ The report can be found on `reports/mutation/html/index.html`.
 
 Often uncovered parts or mutants that survive fall on the following categories:
 
-* Dead code (code that is not used)
-* Code that is not covered by tests
-* Needs more multiple users and seeds to be covered (more variation). The next section provides some tips to add more variation.
+* Dead code (code that is not used). It is best to remove such code.
+* Code that is not covered by tests. It is best to cover such code by tests.
+* Needs more multiple *users* and *seeds* to be covered (more variation). The next section provides some tips to add more variation.
 
 ## Step: Add more variation in the golden master test
 
@@ -305,6 +315,49 @@ public void can_run_controlled_game_for_multiple_seeds() {
 To add multiple players and multiple seeds, you can use yet another trick, namely `Approvals.verifyAllCombinations`.
 
 But before we reach that point, we need to make the players can be injected through code. An example on how to do that below.
+
+Make the players injectable in GameRunner by adding a second runGame method. The resulting class below. 
+
+```java
+public class GameRunner {
+
+    private static boolean notAWinner;
+
+    public static void main(String[] args) {
+        Random rand = new Random();
+        runGame(rand);
+    }
+
+    public static void runGame(Random rand){
+        runGame(rand, "Chet", "Pat", "Sue");
+    }
+
+    public static void runGame(Random rand, String... players) {
+        Game aGame = new Game();
+
+        for (String player:players) {
+            aGame.add(player);
+
+        }
+
+        do {
+
+            aGame.roll(rand.nextInt(5) + 1);
+
+            if (rand.nextInt(9) == 7) {
+                notAWinner = aGame.wrongAnswer();
+            } else {
+                notAWinner = aGame.wasCorrectlyAnswered();
+            }
+
+
+
+        } while (notAWinner);
+    }
+}
+```
+
+After that we need to make changes to the tests. Because approval tests relies on toString on the players to see which variation it is running, we cannot directly use a string array to test. That is why we make the Players object.
 
 ```java
 private class Players {
@@ -338,11 +391,6 @@ public String runGameForSeedAndPlayers(Integer seed, Players players) {
 
     return outputStream.toString();
 }
-```
-
-Finally we are ready to try with adding multiple combinations.
-
-```java
 
 @Test
 public void can_run_controlled_game_for_multiple_players() throws Exception {
@@ -367,5 +415,6 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
 
   Through experimentation and studying the code we found  that 0 till 6 players and specific seeds kills the maximal amount of mutants. The java seeds are 3 and 5. Javascript seeds are 3, 5, 7, 77.
 
+  Even with approval testing with all combinations you will probably not be able to cover `for (int i = 0; i < 50; i++) {`. As it is in the initialisation of the questions, lets ignore it for now.  
   </p>
 </details>
