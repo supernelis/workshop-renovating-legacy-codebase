@@ -15,7 +15,7 @@ Some typical quick wins:
 
 ### Extract magic values
 
-A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name. 
+A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name, and you prevent errors possible errors that come from giving the values every time again.  
 
 **Can you identify such magic values? Please extract them!**
 
@@ -27,8 +27,9 @@ Magic values can be extracted as constants or enums.
   
   A good example can be found in `if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;`. It is not immediatly obvious what the 11 and 12 stand for in this statement. 
 
-  Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to 
+  Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to:
 
+*Java* 
 ```java
 
 public class Game {
@@ -47,14 +48,55 @@ if (places[currentPlayer] >= NUMBER_OF_CELLS) places[currentPlayer] = places[cur
 ```
 
 Be sure to run your tests at this point, and to commit the code of they succeed!  
+
+*Javascript* 
+
+
   </p>
 </details>
 
 <details>
   <summary>Click to see an example with an enum</summary>
   <p>
-    
-  Like POP, SCIENCE, SPORT, ROCK to an enum QuestionCategorie
+
+  A good example to extract in an enum are `"Pop", "Science", "Sports", "Rock"`. These values are possible values for the question category.
+
+  *Java*
+
+  In IntelliJ you can extract these values as constants first (using the IDE provided constant extraction) leading to:
+
+  ```java
+public static final String POP = "Pop";
+public static final String SCIENCE = "Science";
+public static final String SPORTS = "Sports";
+public static final String ROCK = "Rock";
+  ```
+
+  Then you can extract a delegate (using the IDE provided delegate extraction), selecting the four constants and ticking extract as enum.
+
+```java
+
+public enum Category {
+    POP("Pop"), SCIENCE("Science"), SPORTS("Sports"), ROCK("Rock");
+    private String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    Category(String value) {
+        this.value = value;
+    }
+}
+
+```
+
+And an example of the usage then becomes
+```java
+		if (places[currentPlayer] == 0) return Category.POP;
+```
+
+**With this the tests still fail. Can you spot why?**
 
   *javascript*
 
