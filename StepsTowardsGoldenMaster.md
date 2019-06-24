@@ -81,17 +81,17 @@ function runGame(){
         result += value + "\n";
     };
 
-    gameRunner()
+    gameRunner();
 
     console.log = console.oldLog;
     return result;
 }
 
 it("should allow to control the output", function() {
-    var result = runGame()
-    console.log("This is the result")
-    console.log(result)
-})
+    var result = runGame();
+    console.log("This is the result");
+    console.log(result);
+});
 ```
 
 The result comes back from the runGame function. 
@@ -164,7 +164,7 @@ function initialiseRandom(seed) {
 
 it("should control the randomness", function(){
     initialiseRandom(1);
-    expect(Math.floor(Math.random() * 6)).to.eq(4)
+    expect(Math.floor(Math.random() * 6)).to.eq(4);
 });
 ```
 
@@ -197,12 +197,26 @@ public void can_run_a_controlled_game() {
   <p>
 
 ```javascript
-it("should compare the result", function(){
-    initialiseRandom(1);
-    var result = runGame()
 
-    this.verify(result, { reporters: ["donothing"] });
-})
+function runGame(seed=1){
+    initialiseRandom(seed);
+    console.oldLog = console.log;
+    var result = "";
+    console.log = function (value) {
+        result += value + "\n";
+    };
+
+    gameRunner();
+
+    console.log = console.oldLog;
+    return result;
+}
+
+it("should compare the result", function(){
+    var result = runGame(1);
+
+    this.verify(result, {reporters: ["donothing"]});
+});
 ```
 
 TIP for javascript: you can select an automated mere tool by changing the [reporter](https://github.com/approvals/Approvals.NodeJS#reporters).
@@ -214,7 +228,7 @@ On the first run the test will still fail, as it lacks an approved version with 
 
 ## Step: Check the quality of your tests
 
-Now we have a golden master test we still need to check if it is effective. For this we are mainly intested in the Game class. This is done in two steps:
+Now we have a golden master test we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
 
 * Check the code coverage.
 * Use mutation testing
@@ -270,7 +284,7 @@ Next you can open the file at `coverage/index.html`
 
 The idea behind the mutation testing is that the mutation testing tool produces mutants (i.e. versions of your code with changes) that need to be killed by the tests (i.e. make the tests fail). Every mutant that survives might indicate to a test that insufficiently covers such case.
 
-We already configured maven to run the mutation testing easily. 
+We already configured maven to run the mutation testing easily.
 
 ```bash
 mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
@@ -411,6 +425,60 @@ public void can_run_controlled_game_for_multiple_players() throws Exception {
 
 ### Tips for Javascript
 
+First, lets make it easy to run with several players without screwing up the existing code. We start in the gamerunner.js file.
+
+```javascript
+module.exports = function (players=['Chet', 'Pat', 'Sue']) {
+    var notAWinner = false;
+
+    var game = new Game();
+
+    for (var player in players ) {
+        game.add(player);
+    }
+    
+    do {
+
+        game.roll(Math.floor(Math.random() * 6) + 1);
+
+        if (Math.floor(Math.random() * 10) == 7) {
+            notAWinner = game.wrongAnswer();
+        } else {
+            notAWinner = game.wasCorrectlyAnswered();
+        }
+
+    } while (notAWinner);
+};  
+```
+
+Next we should also update the runGame in the game.spec.js file to easily run the game with different player combinations. 
+
+```javascript
+function runGame(seed=1, players=['Matteo','Nelis']){
+    initialiseRandom(seed);
+    console.oldLog = console.log;
+    var result = "";
+    console.log = function (value) {
+        result += value + "\n";
+    };
+
+    gameRunner(players);
+
+    console.log = console.oldLog;
+    return result;
+}
+```
+
+Next you can add tests with combinations of seeds and players, like
+
+```javascript
+
+it("2 player", function () {
+    this.verify(runGame(9, ["Matteo", "John"]), {reporters: ["donothing"]});
+});
+
+```
+
 The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write our the tests yourself.
 
 <details>
@@ -420,5 +488,8 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
   Through experimentation and studying the code we found  that 0 till 6 players and specific seeds kills the maximal amount of mutants. The java seeds are 3 and 5. Javascript seeds are 3, 5, 7, 77.
 
   Even with approval testing with all combinations you will probably not be able to cover `for (int i = 0; i < 50; i++) {`. As it is in the initialisation of the questions, lets ignore it for now.  
+
+  And for javascript mutation testing, Array(6) does not differ from Array(), as all Arrays are unlimited. It is safe to ignore.
+  
   </p>
 </details>
