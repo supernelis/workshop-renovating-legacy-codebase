@@ -1,8 +1,10 @@
 # Renovating the codebase
 
+In this part of the workshop we will perform refactorings. This section will give an example of several types of refactorings. The goal is to get through the examples, and then further refactor allong the same line to extract a more domain concepts. 
+
 ## Reveal intent
 
-When renovating a horrible codebase, it is often a good first step to do a series of smaller refactorings to get to know the codebase better, to better reveal the intent as you improve your understanding and to remove some clutter. This is a warmup before starting the heavy lifting.
+When looking to a new codebase the number of problem you find in there can be overwelming. Our advice is to start with micro-improvements to clarify the intent and make the code more simple and readable. This allows you to remove clutter and get to know the codebase better before starting the heavy lifting of restructuring it. 
 
 Some typical quick wins:
 
@@ -11,25 +13,45 @@ Some typical quick wins:
 * Remove micro duplications
 * Remove multiline duplication
 
-### Extract magic numbers or Strings
+### Extract magic values
 
-A magic number or string is a value that is used in the code: 1) without clear context or meaning; 2) Used in several places.
+A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name. 
 
-**Can you identify such magic numbers and strings?**
+**Can you identify such magic values? Please extract them!**
 
-Magic numbers or Strings can be extracted as constants or enums. 
+Magic values can be extracted as constants or enums. 
 
 <details>
-  <summary>Click to see the example with a constant</summary>
+  <summary>Click to see an example with a constant</summary>
   <p>
-    
-  Like NB_CELLS
   
+  A good example can be found in `if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;`. It is not immediatly obvious what the 11 and 12 stand for in this statement. 
+
+  Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to 
+
+```java
+
+public class Game {
+    public static final int NUMBER_OF_CELLS = 12;
+
+...
+
+```
+
+And the if construct itself changes to: 
+
+```java
+
+if (places[currentPlayer] >= NUMBER_OF_CELLS) places[currentPlayer] = places[currentPlayer] - NUMBER_OF_CELLS;
+
+```
+
+Be sure to run your tests at this point, and to commit the code of they succeed!  
   </p>
 </details>
 
 <details>
-  <summary>Click to see the example with an enum </summary>
+  <summary>Click to see an example with an enum</summary>
   <p>
     
   Like POP, SCIENCE, SPORT, ROCK to an enum QuestionCategorie
