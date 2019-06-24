@@ -344,16 +344,20 @@ Finally we are ready to try with adding multiple combinations.
 
 @Test
 public void can_run_controlled_game_for_multiple_players() throws Exception {
-    Integer[] seeds = {1,2};
-    String[][] playerCombinations = {
-            {"Chet"},
-            {"Chet", "Jean"},
-            
+    Integer[] seeds = {1, 2};
+    Players[] playerCombinations = new Players[] {
+            new Players(),
+            new Players("Chet"),
+            new Players("Chet", "Jean"),
     };
 
     CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
 }
 ```
+
+### Javascript
+
+The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write our the tests yourself.
 
 **Play a bit with the combinations until you get most mutants killed.**
 
@@ -361,7 +365,7 @@ public void can_run_controlled_game_for_multiple_players() throws Exception {
   <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
   <p>
 
-  Through experimentation and studying the code we found that the combination of the seeds 3 and 7 for java and from 0 till 6 players kills the maximal amount of mutants.
-  
+  Through experimentation and studying the code we found  that 0 till 6 players and specific seeds kills the maximal amount of mutants. The java seeds are 3 and 5. Javascript seeds are 3, 5, 7, 77.
+
   </p>
 </details>
