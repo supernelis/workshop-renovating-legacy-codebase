@@ -85,6 +85,20 @@ Be sure to run your tests at this point, and to commit the code of they succeed!
 
 *Javascript* 
 
+```javascript
+module.exports = function () {
+    const NB_CELLS=12;
+
+...
+```
+
+And the if construct itself changes to:
+
+```javascript
+if (currentPlayerPosition() >= NB_CELLS) {
+  places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
+}
+```
 
   </p>
 </details>
@@ -130,7 +144,7 @@ And an example of the usage then becomes
 		if (currentPlayerPosition() == 0) return Category.POP;
 ```
 
-**With this the tests still fail. Can you spot why?**
+**With this the tests still fail, lukily we have the golden master. Can you spot why?**
 
   *javascript*
 
