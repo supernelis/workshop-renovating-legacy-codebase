@@ -15,7 +15,7 @@ The first step in building up an effective golden master is to understand what t
 
 JAVA: Run the main in GameRunner. Briefly look to the output.
 
-JS: Open a node shell in the root of the project and execute the command `require('./src/game-runner')()`. 
+JS: Open a node shell in the root of the project and execute the command `require('./src/game-runner')()`.
 
 Run the game several times. Briefly study the code of the GameRunner.
 
@@ -51,7 +51,7 @@ public class GoldenMasterTest {
 
         PrintStream oldOut = System.out;
         System.setOut(printStream);
-        
+
         GameRunner.runGame();
 
         System.setOut(oldOut);
@@ -286,7 +286,9 @@ Often uncovered parts or mutants that survive fall on the following categories:
 
 There are two ways to add more variation in the golden master tests. You can add more seeds and you can add more players, and you can combine the two.
 
-### Java
+**Play a bit with the combinations until you get most mutants killed!**
+
+### Tips for Java
 
 To add multiple seeds you can use `Approvals.verifyAll()` where you can indicate you want to run re-run the test for each of the seeds.
 
@@ -355,11 +357,9 @@ public void can_run_controlled_game_for_multiple_players() throws Exception {
 }
 ```
 
-### Javascript
+### Tips for Javascript
 
 The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write our the tests yourself.
-
-**Play a bit with the combinations until you get most mutants killed.**
 
 <details>
   <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
