@@ -518,38 +518,62 @@ use in `Game``
 
 ## Replace case selection with maps
 
-<details>
-  <summary>Click to see an example of a technical concern. </summary>
-  <p>
+*Java*
+
+```java
+
+private Map<Integer, Category> categoryForPosition = new HashMap();
+
+public  Game(Reporter reporter){
+
+  ...
+
+  buildCategories();
+  
+  ...
+}
+
+private void buildCategories() {
+  categoryForPosition.put(0, Category.POP);
+  categoryForPosition.put(1, Category.SCIENCE);
+  categoryForPosition.put(2, Category.SPORTS);
+  categoryForPosition.put(3, Category.ROCK);
+}
+
+private Category currentCategory() {
+  int scaledPosition = currentPlayerPosition() % categoryForPosition.size();
+  return categoryForPosition.get(scaledPosition);
+}
+
+```
 
 *javascript*
 
 ```javascript
-    const categoryForPosition = new Map();
-    categoryForPosition.set(0, Category.POP);
-    categoryForPosition.set(1, Category.SCIENCE);
-    categoryForPosition.set(2, Category.SPORTS);
-    categoryForPosition.set(3, Category.ROCK);
+const categoryForPosition = new Map();
+categoryForPosition.set(0, Category.POP);
+categoryForPosition.set(1, Category.SCIENCE);
+categoryForPosition.set(2, Category.SPORTS);
+categoryForPosition.set(3, Category.ROCK);
 
-    var currentCategory = function () {
-        const nbCategories = Object.keys(Category).length;
-        const scaledPosition = places[currentPlayerIndex] % nbCategories;
-        return categoryForPosition.get(scaledPosition);
-    };
+var currentCategory = function () {
+    const nbCategories = Object.keys(Category).length;
+    const scaledPosition = places[currentPlayerIndex] % nbCategories;
+    return categoryForPosition.get(scaledPosition);
+};
 ```
 
 you can also replace the Map with an algorithm.
 
-```javascritp
-  var currentCategory = function () {
-		const nbCategories = Object.keys(Category).length;
-		const scaledPosition = places[currentPlayerIndex] % nbCategories
-		return Category[Object.keys(Category)[scaledPosition]];
-	};
+```javascript
+var currentCategory = function () {
+  const nbCategories = Object.keys(Category).length;
+  const scaledPosition = places[currentPlayerIndex] % nbCategories
+  return Category[Object.keys(Category)[scaledPosition]];
+};
 ```
 
-  </p>
-</details>
+
 
 
 ## Javascript plugin VSCode
