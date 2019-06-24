@@ -518,6 +518,12 @@ use in `Game``
 
 ## Replace case selection with maps
 
+The next refactor is to attempt to remove switch cases or if constructs for selecting a specific case. The example is the `currentCategory` method. 
+
+Before starting it is best to reorder the statements a bit, to reveal that 0, 4 and 8 lead to POP, 1, 5 and 9 lead to SCIENCE, ... This means there is a repetition and we can use the module operator to select from a map with four entries.
+
+The result will look something like this:
+
 *Java*
 
 ```java
@@ -563,7 +569,7 @@ var currentCategory = function () {
 };
 ```
 
-you can also replace the Map with an algorithm.
+In javascript you can also replace the Map with an algorithm.
 
 ```javascript
 var currentCategory = function () {
@@ -572,15 +578,6 @@ var currentCategory = function () {
   return Category[Object.keys(Category)[scaledPosition]];
 };
 ```
-
-
-
-
-## Javascript plugin VSCode
-
-- [Refactoring JavaScript](https://code.visualstudio.com/docs/editor/refactoring)
-- [JS Refactor](https://marketplace.visualstudio.com/items?itemName=cmstead.jsrefactor)
-
 
 
 
