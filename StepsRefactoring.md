@@ -107,41 +107,43 @@ if (currentPlayerPosition() >= NB_CELLS) {
   <summary>Click to see an example with an enum</summary>
   <p>
 
-  A good example to extract in an enum are `"Pop", "Science", "Sports", "Rock"`. These values are possible values for the question category.
+A good example to extract in an enum are `"Pop", "Science", "Sports", "Rock"`. These values are possible values for the question category.
 
-  *Java*
+*Java*
 
-  In IntelliJ you can extract these values as constants first (using the IDE provided constant extraction) leading to:
+In IntelliJ you can extract these values as constants first (using the IDE provided constant extraction) leading to:
 
-  ```java
+```java
 public static final String POP = "Pop";
 public static final String SCIENCE = "Science";
 public static final String SPORTS = "Sports";
 public static final String ROCK = "Rock";
-  ```
+```
 
-  Then you can extract a delegate (using the IDE provided delegate extraction), selecting the four constants and ticking extract as enum.
+Then you can extract a delegate (using the IDE provided delegate extraction), selecting the four constants and ticking extract as enum.
 
 ```java
 
 public enum Category {
-    POP("Pop"), SCIENCE("Science"), SPORTS("Sports"), ROCK("Rock");
-    private String value;
+  POP("Pop"), SCIENCE("Science"), SPORTS("Sports"), ROCK("Rock");
+  
+  private String value;
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    Category(String value) {
-        this.value = value;
-    }
+  Category(String value) {
+    this.value = value;
+  }
 }
 
 ```
 
 And an example of the usage then becomes
+
 ```java
-		if (currentPlayerPosition() == 0) return Category.POP;
+  if (currentPlayerPosition() == 0) return Category.POP;
 ```
 
 **With this the tests still fail, lukily we have the golden master. Can you spot why?**
@@ -193,13 +195,15 @@ if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPla
 This can be extracted in
 
 ```java
-	private void move(int roll) {
-		places[currentPlayerIndex] = places[currentPlayerIndex] + roll;
-		if (places[currentPlayerIndex] >= NUMBER_OF_CELLS)
-			places[currentPlayerIndex] = places[currentPlayerIndex] - NUMBER_OF_CELLS;
-	}
+private void move(int roll) {
+  places[currentPlayerIndex] = places[currentPlayerIndex] + roll;
+  if (places[currentPlayerIndex] >= NUMBER_OF_CELLS)
+    places[currentPlayerIndex] = places[currentPlayerIndex] - NUMBER_OF_CELLS;
+}
 
 ```
+
+There are several other similar types of duplication, feel free to extract them.
 
 ### Removing multiline duplication by reordening an IF construct
 
