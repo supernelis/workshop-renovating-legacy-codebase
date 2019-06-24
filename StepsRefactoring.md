@@ -142,16 +142,77 @@ And an example of the usage then becomes
   </p>
 </details>
 
+### Remove multiline duplication by extracting a function
 
+Next it is time to search for multiline duplications and extract them in functions. An example of this is
 
-### Remove multiline duplication
+```java
 
 places[currentPlayerIndex] = currentPlayerPosition() + roll;
 if (currentPlayerPosition() >= NB_CELLS) places[currentPlayerIndex] = currentPlayerPosition() - NB_CELLS;
 
--> Move(int nbPlaces)
+```
 
-## Extract 
+This can be extracted in
+
+```java
+	private void move(int roll) {
+		places[currentPlayerIndex] = places[currentPlayerIndex] + roll;
+		if (places[currentPlayerIndex] >= NUMBER_OF_CELLS)
+			places[currentPlayerIndex] = places[currentPlayerIndex] - NUMBER_OF_CELLS;
+	}
+
+```
+
+### Removing multiline duplicaiton by reordening a if
+
+A more advance removal of duplication is to remove duplication by restructuring a complex IF construct.
+
+For example, looking to the roll function you will see the following lines twice:
+
+```java
+move(roll);
+
+System.out.println(currentPlayerName()
+    + "'s new location is "
+    + places[currentPlayerIndex]);
+System.out.println("The category is " + currentCategory());
+askQuestion();
+```
+
+By inverting the nested if condition and adding a return you can remove the duplication. *Ask one of the facilitators to help you with this one*.
+
+The end result will be a simplified roll.
+
+```java
+public void roll(int roll) {
+  System.out.println(currentPlayerName() + " is the current player");
+  System.out.println("They have rolled a " + roll);
+
+  if (inPenaltyBox[currentPlayerIndex]) {
+    if (roll % 2 == 0) {
+      System.out.println(currentPlayerName() + " is not getting out of the penalty box");
+      isGettingOutOfPenaltyBox = false;
+      return;
+    }
+    isGettingOutOfPenaltyBox = true;
+
+    System.out.println(currentPlayerName() + " is getting out of the penalty box");
+  }
+
+  move(roll);
+
+  System.out.println(currentPlayerName()
+      + "'s new location is "
+      + places[currentPlayerIndex]);
+  System.out.println("The category is " + currentCategory());
+  askQuestion();
+}
+```
+
+
+
+## Extract functionality (from Game class)
 
 After focussing on revealing intent it is time for the next step.
 
