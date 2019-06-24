@@ -148,15 +148,34 @@ And an example of the usage then becomes
 
   *javascript*
 
-  ```javascript
-  module.exports = Object.freeze({
-    "POP": "Pop",
-    "SCIENCE": "Science",
-    "SPORTS": "Sports",
-    "ROCK": "Rock"
-  });
-  ```
-  
+In javascript we start by defining the enum in a new file called `category.js`
+
+```javascript
+module.exports = Object.freeze({
+  "POP": "Pop",
+  "SCIENCE": "Science",
+  "SPORTS": "Sports",
+  "ROCK": "Rock"
+});
+```
+
+Next we must import the new module in the game module:
+
+```javascript
+var Category = require('./category.js')
+
+module.exports = function () {
+  ...
+
+```
+
+Finally we can use it like this:
+
+```javascript 
+if (currentPlayerPosition() == 0)
+  return Category.POP;
+```
+
   </p>
 </details>
 
