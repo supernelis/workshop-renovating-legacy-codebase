@@ -13,6 +13,36 @@ Some typical quick wins:
 * Remove micro duplications
 * Remove multiline duplication
 
+### Simple renames
+
+Renaming variables is one of the most simple ways to reveal intent. It is best to use your IDE refactoring capabilities to rename variables consistently.
+
+An example of a confusiong name is `currentPlayer`. It seems to suggest it contains the currentplayer, but actually it only contains the index of the current player. If you want to know anything about this player you have to access some lists. To ensure this is clear, we can rename this to `currentPlayerIndex`.
+
+### Remove micro duplications in functions
+
+With micro duplications we mean duplications less then a line. An example of such statement is `players.get(currentPlayerIndex)` in java or `players[currentPlayerIndex];` in javascript, repeated 7 times. These types of duplication clutter the code, and it is not always obvious what this is. By extracting it in a function and give this a name, the code becomes more readable. The example statement represents the name of the current player.
+
+*java*
+```java
+private String currentPlayerName() {
+  return players.get(currentPlayer);
+}
+```
+
+To make this work, you will also have to assign a type to the list of players, like `ArrayList<String> players = new ArrayList();`.
+
+*javascript*
+
+```javascript
+function currentPlayerName() {
+  return players[currentPlayerIndex];
+}
+```
+
+`places[currentPlayer] -> currentPlayerPosition()`
+
+
 ### Extract magic values
 
 A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name, and you prevent errors possible errors that come from giving the values every time again.  
@@ -113,32 +143,6 @@ And an example of the usage then becomes
 </details>
 
 
-### Simple renames
-
-Rename currentPlayer to currentPlayerIndex
-
-### Remove micro duplications
-
-Like 
-
-*java*
-```java
-players.get(currentPlayer); -> currentPlayerName();
-```
-
-*javascript*
-
-```javascript
-players[currentPlayerIndex]; -> currentPlayerName();
-```
-
-Like
-
-*java* and *javascript*
-
-```
-places[currentPlayer] -> currentPlayerPosition()
-```
 
 ### Remove multiline duplication
 
