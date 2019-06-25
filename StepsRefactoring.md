@@ -387,11 +387,13 @@ reporter = new Reporter();
 
 And everywhere in the code you will find:
 
-```java
+```javascript
 reporter.report(...);
 ```
 
 Next we ensure the dependencies are properly injected:
+
+*Java*
 
 ```java
 public class Reporter {
@@ -466,6 +468,33 @@ public String runGameForSeedAndPlayers(Integer seed, Players players) {
 	}
  }
  ```
+
+```javascript
+module.exports = function (players = ["Chet", "Pat", "Sue"], reporter = new Reporter()) {
+  var notAWinner = false;
+
+  var game = new Game(reporter);
+
+  ...
+
+```
+
+```javascript
+function runGame(seed=1, players=["Matteo","Nelis"]){
+  initialiseRandom(seed);
+
+  const reporter = {};
+  var result = "";
+
+  reporter.report = function(message){
+      result += message + "\n";
+  };
+
+  gameRunner(players, reporter);
+
+  return result;
+}
+```
   
 #### Meaninfull reports
 
@@ -476,10 +505,22 @@ public class Reporter {
 
 ...
 
-    void reportNbPlayers(int nbPlayers) {
+    void reportPlayerNumber(int playerNumber) {
         report("They are player number " + nbPlayers);
     }
 }
+```
+
+```javascript
+module.exports = function() {
+  this.report = function(message) {
+    console.log(message);
+  };
+
+  this.reportPlayerNumber = function(playerNumber) {
+    this.report("They are player number " + playerNumber);
+  };
+};
 ```
 
 **Suggestion: extract a few more of these messages.**
