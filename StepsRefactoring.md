@@ -365,18 +365,30 @@ The next step is to create a Reporter class and move the method there.
 
 *javascript*
 
+Make a new module in the file `reporter.js`.
+
 ```javascript
-module.exports = {
-    report: function(message) {
+module.exports = function() {
+    this.report = function(message) {
         console.log(message);
     }
 }
 ```
-  
+
+Be sure to import it correctly:
+
+```javascript
+var Reporter = require('./reporter.js');
+
+...
+
+reporter = new Reporter();
+```
+
 And everywhere in the code you will find:
 
 ```java
-  reporter.report(...);
+reporter.report(...);
 ```
 
 Next we ensure the dependencies are properly injected:
