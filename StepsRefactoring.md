@@ -1,6 +1,6 @@
 # Renovating the codebase
 
-In this part of the workshop we will perform refactorings. This section will give an example of several types of refactorings. The goal is to get through the examples, and then further refactor allong the same line to extract a more domain concepts.
+In this part of the workshop we will perform refactorings. This section will give an example of several types of refactorings. The goal is to get through the examples, and then continue to refactor on your own allong the same lines until the time is over. 
 
 We will move through examples of the following types of refactorings:
 * Reveal intent
