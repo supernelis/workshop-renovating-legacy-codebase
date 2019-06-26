@@ -23,7 +23,7 @@ The tools we used in preparation of this workshop:
 * npm
 * Node
 * Visual Studio Code with the following plugins
- * [Refactoring JavaScript](https://code.visualstudio.com/docs/editor/refactoring)
- * [JS Refactor](https://marketplace.visualstudio.com/items?itemName=cmstead.jsrefactor)
- * [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
+  * [Refactoring JavaScript](https://code.visualstudio.com/docs/editor/refactoring)
+  * [JS Refactor](https://marketplace.visualstudio.com/items?itemName=cmstead.jsrefactor)
+  * [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters)
 * Alternative: Webstorm
