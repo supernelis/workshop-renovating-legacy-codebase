@@ -634,7 +634,7 @@ private boolean hasCurrentPlayerWon() {
 }
 ```
 
-*javascript*
+*Javascript*
 
 The player module
 
@@ -721,7 +721,7 @@ private Category currentCategory() {
 
 ```
 
-*javascript*
+*Javascript*
 
 ```javascript
 const categoryForPosition = new Map();
