@@ -3,6 +3,7 @@
 In this part of the workshop we will perform refactorings. This section will give an example of several types of refactorings. The goal is to get through the examples, and then continue to refactor on your own allong the same lines until the time is over. 
 
 We will move through examples of the following types of refactorings:
+
 * Reveal intent
 * Extract functionality (from the game class)
 * Replace case selection with maps
@@ -28,7 +29,8 @@ An example of a confusiong name is `currentPlayer`. It seems to suggest it conta
 
 With micro duplications we mean duplications less then a line. An example of such statement is `players.get(currentPlayerIndex)` in java or `players[currentPlayerIndex]` in javascript, repeated 7 times. These types of duplication clutter the code, and it is not always obvious what it means. By extracting it in a function and give this a name, the code becomes more readable. The given example statement represents the name of the current player, so we can extract the following method.
 
-*java*
+*Java*
+
 ```java
 private String currentPlayerName() {
   return players.get(currentPlayer);
@@ -37,7 +39,7 @@ private String currentPlayerName() {
 
 To make this work, you will also have to assign a type to the list of players, like `ArrayList<String> players = new ArrayList();`.
 
-*javascript*
+*Javascript*
 
 ```javascript
 function currentPlayerName() {
@@ -60,6 +62,7 @@ A good example can be found in `if (places[currentPlayer] > 11) places[currentPl
 Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to:
 
 *Java* 
+
 ```java
 
 public class Game {
@@ -139,7 +142,7 @@ And an example of the usage then becomes
 
 **DO: With this the tests still fail in Java, lukily we have the golden master. Can you spot why?**
 
-  *javascript*
+  *Javascript*
 
 In javascript we start by defining the enum in a new file called `category.js`
 
@@ -320,7 +323,7 @@ Everywhere in the code the output is written directly to the console (System.out
 
 The first step towards a reporter is to extract the output in a method.
 
-*java*
+*Java*
 
 ```java
   private void report(String message) {
@@ -351,7 +354,7 @@ The next step is to create a Reporter class and move the method there.
     }
   ```
 
-*javascript*
+*Javascript*
 
 Make a new module in the file `reporter.js`.
 
@@ -445,7 +448,7 @@ public String runGameForSeedAndPlayers(Integer seed, Players players) {
 }
 ```
 
- *javascript*
+ *Javascript*
 
  ```javascript
  module.exports = function (reporter) {
@@ -488,6 +491,8 @@ function runGame(seed=1, players=["Matteo","Nelis"]){
 
 You can go even one step further and make meaningfull methods to report about stuff, seperating the way you report from the gamelogic. An example of extracing one message for reporting about the number of players below.
 
+*Java*
+
 ```java
 public class Reporter {
 
@@ -499,11 +504,11 @@ public class Reporter {
 }
 ```
 
+*Javascript*
+
 ```javascript
 module.exports = function() {
-  this.report = function(message) {
-    console.log(message);
-  };
+  ...
 
   this.reportPlayerNumber = function(playerNumber) {
     this.report("They are player number " + playerNumber);
@@ -528,7 +533,6 @@ The first step is to extract to extract all things you want to move in methods, 
 Usage in the game class:
 
 ```java
-
 private Player currentPlayer() {
   return players.get(currentPlayerIndex);
 }
@@ -548,7 +552,6 @@ private void addCoinForCurrentPlayer() {
 private boolean hasCurrentPlayerWon() {
   return (currentPlayerCoins() == NB_COINS_TO_WIN);
 }
-
 ```
 
 *Javascript*
@@ -556,22 +559,21 @@ private boolean hasCurrentPlayerWon() {
 Usage in the game module:
 
 ```javascript
+function currentPlayerName() {
+  return players[currentPlayerIndex];
+}
 
-    function currentPlayerName() {
-      return players[currentPlayerIndex];
-    }
+function currentPlayerCoins() {
+  return purses[currentPlayerIndex];
+}
 
-    function currentPlayerCoins() {
-      return purses[currentPlayerIndex];
-    }
+function addCointToCurrentPlayer() {
+  purses[currentPlayerIndex] += 1;
+}
 
-    function addCointToCurrentPlayer() {
-      purses[currentPlayerIndex] += 1;
-    }
-
-    function hasCurrentPlayerWon() {
-      return purses[currentPlayerInded] == 6;
-    }
+function hasCurrentPlayerWon() {
+  return purses[currentPlayerInded] == 6;
+}
 ```
 
 Then we can extract the player. We typically still do this in two steps: 1) only extract player and its player name (run tests, commit; 2) add the coins (run tests, commit). The end results can be found below.
@@ -583,28 +585,28 @@ The player class.
 
 public class Player {
 
-    private final String name;
-    private int coins = 0;
+  private final String name;
+  private int coins = 0;
 
-    Player(String name){
-        this.name = name;
-    }
+  Player(String name){
+      this.name = name;
+  }
 
-    public String getName(){
-        return name;
-    }
+  public String getName(){
+      return name;
+  }
 
-    public int getCoins(){
-        return coins;
-    }
+  public int getCoins(){
+      return coins;
+  }
 
-    public void addCoin(){
-        coins++;
-    }
+  public void addCoin(){
+      coins++;
+  }
 
-    public boolean hasWon() {
-        return getCoins() == Game.NB_COINS_TO_WIN;
-    }
+  public boolean hasWon() {
+      return getCoins() == Game.NB_COINS_TO_WIN;
+  }
 }
 ```
 
@@ -654,32 +656,32 @@ module.exports = function(name) {
 Usage in the game module.
 
 ```javascript
-  const Player = require('./player');
+const Player = require('./player');
 
-  module.exports = function (reporter) {
+module.exports = function (reporter) {
 
-    ...
+  ...
 
-    function currentPlayer() {
-      return players[currentPlayerIndex];
-    }
-
-    function currentPlayerName() {
-      return currentPlayer().name;
-    }
-
-    function currentPlayerCoins() {
-      return currentPlayer().coins;
-    }
-
-    function addCointToCurrentPlayer() {
-      currentPlayer().addCoin();
-    }
-
-    function hasCurrentPlayerWon() {
-      return currentPlayer().hasWon();
-    }
+  function currentPlayer() {
+    return players[currentPlayerIndex];
   }
+
+  function currentPlayerName() {
+    return currentPlayer().name;
+  }
+
+  function currentPlayerCoins() {
+    return currentPlayer().coins;
+  }
+
+  function addCointToCurrentPlayer() {
+    currentPlayer().addCoin();
+  }
+
+  function hasCurrentPlayerWon() {
+    return currentPlayer().hasWon();
+  }
+}
 ```
 
 ## Replace case selection with maps
