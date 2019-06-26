@@ -36,7 +36,7 @@ You can try for yourselve, or look to our examples below.
 
 ### Example for Java
 
-Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the System.out stream with the one you control. Typically we add a helper method in a test. So setup: 
+Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the `System.out` stream with the one you control. Typically we add a helper method in a test. So setup: 
 
 
 ```java
@@ -89,7 +89,7 @@ function runGame(){
 
 it("should allow to control the output", function() {
     var result = runGame();
-    console.log("This is the result");
+    console.log("This is the result");
     console.log(result);
 });
 ```
@@ -98,7 +98,7 @@ The result comes back from the runGame function.
 
 ## Step: Make the tests reproducible
 
-The GameRunner uses a random nummer generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
+The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
 
 ### Control randomness in Java
 
@@ -110,7 +110,7 @@ Random rand = new Random(seed);
 rand.nextInt();                     // will always produce the exact same result
 ```
 
-To allow running the game with such controlled randomGenerator we must extract a runGame in the gameRunner with a random number generator as parameter.
+To allow running the game with such controlled randomGenerator we must extract (preferably using an IDE) a runGame in the gameRunner with a random number generator as parameter.
 
 ```java
 public static void runGame(Random rand) { ... }
@@ -138,11 +138,11 @@ public class GoldenMasterTests {
 }
 ```
 
-It is not a real test yet (no asserts yet), but at least it allows us to easily run with a reproducible output. 
+It is not a real test yet (no asserts), but at least it allows us to easily run the game and have a reproducible output. 
 
 ### Control randomness in Javascript
 
-As javascript allows too overwrite any random function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
+As javascript allows to *"overwrite"* any random function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
 
 ```javascript
 var seed = 1;
@@ -228,7 +228,7 @@ On the first run the test will still fail, as it lacks an approved version with 
 
 ## Step: Check the quality of your tests
 
-Now we have a golden master test we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
+Now we have a golden master test but we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
 
 * Check the code coverage.
 * Use mutation testing
@@ -375,7 +375,7 @@ public class GameRunner {
 }
 ```
 
-After that we need to make changes to the tests. Because approval tests relies on toString on the players to see which variation it is running, we cannot directly use a string array to test. That is why we make the Players object.
+After that we need to make changes to the tests. Because approval tests relies on toString of the players to see which variation it is running, we cannot directly use a string array to test. That is why we make the Players object.
 
 ```java
 private class Players {
@@ -454,7 +454,7 @@ module.exports = function (players=['Chet', 'Pat', 'Sue']) {
 Next we should also update the runGame in the game.spec.js file to easily run the game with different player combinations. 
 
 ```javascript
-function runGame(seed=1, players=['Matteo','Nelis']){
+function runGame(seed=1, players){
     initialiseRandom(seed);
     console.oldLog = console.log;
     var result = "";
