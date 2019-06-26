@@ -49,19 +49,15 @@ function currentPlayerName() {
 
 ### Extract magic values
 
-A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name, and you prevent errors possible errors that come from giving the values every time again.  
+A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name, and you prevent errors possible errors that come from giving the values every time again. Magic values can be extracted as constants or enums. 
 
 **DO: Can you identify such magic values? Please extract them!**
 
-Magic values can be extracted as constants or enums. 
+#### Example extracting a magic value to a constant
 
-<details>
-  <summary>Click to see an example with a constant</summary>
-  <p>
-  
-  A good example can be found in `if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;`. It is not immediatly obvious what the 11 and 12 stand for in this statement. 
+A good example can be found in `if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;`. It is not immediatly obvious what the 11 and 12 stand for in this statement. 
 
-  Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to:
+Studying the code in more details will reveal that they are connected to the number of cells on your gameboard which is 12. The `> 11` has the same meaning and can be easily replaced by `>= 12` to simplify the extraction of a constant. This leads to:
 
 *Java* 
 ```java
@@ -100,12 +96,7 @@ if (currentPlayerPosition() >= NB_CELLS) {
 }
 ```
 
-  </p>
-</details>
-
-<details>
-  <summary>Click to see an example with an enum</summary>
-  <p>
+#### Example of extracting magic values to an Enum
 
 A good example to extract in an enum are `"Pop", "Science", "Sports", "Rock"`. These values are possible values for the question category.
 
@@ -177,9 +168,6 @@ Finally we can use it like this:
 if (currentPlayerPosition() == 0)
   return Category.POP;
 ```
-
-  </p>
-</details>
 
 ### Remove multiline duplication by extracting a function
 
