@@ -434,7 +434,7 @@ module.exports = function (players=['Chet', 'Pat', 'Sue']) {
     var game = new Game();
 
     for (var player in players ) {
-        game.add(player);
+        game.add(players[player]);
     }
     
     do {
