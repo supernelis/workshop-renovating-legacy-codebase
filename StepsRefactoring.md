@@ -525,7 +525,6 @@ The first step is to extract to extract all things you want to move in methods, 
 
 *Java*
 
-```java 
 Usage in the game class:
 
 ```java
@@ -554,9 +553,28 @@ private boolean hasCurrentPlayerWon() {
 
 *Javascript*
 
-**TODO**
+Usage in the game module:
 
-Then we can extract the player. We typically still do this in two steps: 1) only extract player and its player name (run tests, commit; 2) add the coins (run tests, commit). The end results can be found below. 
+```javascript
+
+    function currentPlayerName() {
+      return players[currentPlayerIndex];
+    }
+
+    function currentPlayerCoins() {
+      return purses[currentPlayerIndex];
+    }
+
+    function addCointToCurrentPlayer() {
+      purses[currentPlayerIndex] += 1;
+    }
+
+    function hasCurrentPlayerWon() {
+      return purses[currentPlayerInded] == 6;
+    }
+```
+
+Then we can extract the player. We typically still do this in two steps: 1) only extract player and its player name (run tests, commit; 2) add the coins (run tests, commit). The end results can be found below.
 
 *Java*
 
@@ -614,8 +632,9 @@ private boolean hasCurrentPlayerWon() {
 }
 ```
 
-
 *javascript*
+
+The player module
 
 ```javascript
 module.exports = function(name) {
@@ -632,7 +651,7 @@ module.exports = function(name) {
 }
 ```
 
-use in `Game``
+Usage in the game module.
 
 ```javascript
   const Player = require('./player');
