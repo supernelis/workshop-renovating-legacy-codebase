@@ -45,13 +45,13 @@ function currentPlayerName() {
 }
 ```
 
-**Another example to look is `places[currentPlayerIndex]`. Please extract it in a similar way**
+**DO: Another example to look is `places[currentPlayerIndex]`. Please extract it in a similar way**
 
 ### Extract magic values
 
 A magic value is used in the code: 1) without clear context or meaning; 2) Used in several places. By extracting it as a constant you give this magic value a meaning through its name, and you prevent errors possible errors that come from giving the values every time again.  
 
-**Can you identify such magic values? Please extract them!**
+**DO: Can you identify such magic values? Please extract them!**
 
 Magic values can be extracted as constants or enums. 
 
@@ -146,7 +146,7 @@ And an example of the usage then becomes
   if (currentPlayerPosition() == 0) return Category.POP;
 ```
 
-**With this the tests still fail, lukily we have the golden master. Can you spot why?**
+**DO: With this the tests still fail in Java, lukily we have the golden master. Can you spot why?**
 
   *javascript*
 
