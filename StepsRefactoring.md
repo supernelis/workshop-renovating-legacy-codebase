@@ -747,9 +747,6 @@ var currentCategory = function () {
 };
 ```
 
+## Continue to refactor
 
-
-
-
-
-
+If you reached this point you went through an example of each type of refactoring. The goal is now to continue to refactor to extract domain concepts until the time is over. If you lack some inspiration on what to do, feel free to call the facilitators.
