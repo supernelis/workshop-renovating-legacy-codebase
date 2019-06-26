@@ -499,7 +499,7 @@ public class Reporter {
 ...
 
     void reportPlayerNumber(int playerNumber) {
-        report("They are player number " + nbPlayers);
+        report("They are player number " + playerNumber);
     }
 }
 ```
