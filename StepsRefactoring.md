@@ -26,7 +26,7 @@ An example of a confusiong name is `currentPlayer`. It seems to suggest it conta
 
 ### Remove micro duplications in functions
 
-With micro duplications we mean duplications less then a line. An example of such statement is `players.get(currentPlayerIndex)` in java or `players[currentPlayerIndex];` in javascript, repeated 7 times. These types of duplication clutter the code, and it is not always obvious what this is. By extracting it in a function and give this a name, the code becomes more readable. The example statement represents the name of the current player.
+With micro duplications we mean duplications less then a line. An example of such statement is `players.get(currentPlayerIndex)` in java or `players[currentPlayerIndex]` in javascript, repeated 7 times. These types of duplication clutter the code, and it is not always obvious what it means. By extracting it in a function and give this a name, the code becomes more readable. The given example statement represents the name of the current player, so we can extract the following method.
 
 *java*
 ```java
