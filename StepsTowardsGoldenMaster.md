@@ -32,7 +32,7 @@ $ node
 
 One thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case?
 
-You can try for yourselve, or look to our examples below.
+You can try for yourselves, or look to our examples below.
 
 ### Example for Java
 
@@ -70,7 +70,9 @@ In this example, outputStream.toString() contains the output of our test.
 
 ### Example for Javascript
 
-For javascript we do more or less the same as for java. As javascript allows too overwrite any random function, we will use this to overwrite the log function.
+For javascript we do more or less the same as for java. As javascript allows to overwrite any function, we will use this to overwrite the log function.
+
+Open the `game.spec.js` file and add the following code.
 
 ```javascript
 
@@ -94,7 +96,7 @@ it("should allow to control the output", function() {
 });
 ```
 
-The result comes back from the runGame function. 
+Run the test typing `npm test` in the command line. The result comes back from the runGame function. 
 
 ## Step: Make the tests reproducible
 
@@ -142,17 +144,7 @@ It is not a real test yet (no asserts), but at least it allows us to easily run 
 
 ### Control randomness in Javascript
 
-As javascript allows to *"overwrite"* any random function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
-
-```javascript
-var seed = 1;
-Math.random = function () {
-  var x = Math.sin(seed++) * 10000;
-  return x - Math.floor(x);
-}
-```
-
-To integrate this in your code, you can do something like this:
+As javascript allows to *"overwrite"* any function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
 
 ```javascript
 function initialiseRandom(seed) {
@@ -161,10 +153,20 @@ function initialiseRandom(seed) {
         return x - Math.floor(x);
     }
 }
+```
 
-it("should control the randomness", function(){
-    initialiseRandom(1);
-    expect(Math.floor(Math.random() * 6)).to.eq(4);
+Now you can use it in your test to have reproducible results.
+
+```javascript
+function runGame(seed){
+    initialiseRandom(seed);
+    ....
+}
+
+it("should allow to control the output", function() {
+    var result = runGame(1);
+    console.log("This is the result");
+    console.log(result);
 });
 ```
 
@@ -473,7 +475,7 @@ Next you can add tests with combinations of seeds and players, like
 
 ```javascript
 
-it("2 player", function () {
+it("2 players", function () {
     this.verify(runGame(9, ["Matteo", "John"]), {reporters: ["donothing"]});
 });
 
