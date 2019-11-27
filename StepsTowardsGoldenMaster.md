@@ -15,7 +15,7 @@ The first step in building up an effective golden master is to understand what t
 
 <details>
   <summary>In Java </summary>
-  <p> Run the main in GameRunner. Briefly look to the output.</p>
+  <p> Run the main in GameRunner. Study the console output.</p>
 </details>
 
 <details>
@@ -41,16 +41,18 @@ One thing to notice when studying the program is that the only feedback you get 
 
 You can try for yourselves, or look to our examples below.
 
-### Example for Java
+<details>
+  <summary>Example in Java </summary>
+  <p>
 
-Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the `System.out` stream with the one you control. Typically we add a helper method in a test. So setup: 
+Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the `System.out` stream with the one you control. Typically we add a helper method in a test. So setup:
 
 
 ```java
 public class GoldenMasterTest {
 
     @Test
-    public void can_run_a_controlled_game() {
+    public void can_capture_the_output_game() {
         String result = runGame();
 
         System.out.println(result);
@@ -73,9 +75,16 @@ public class GoldenMasterTest {
 
 ```
 
+The above example also assumes you extracted the code from the main in a static method `runGame` on the gamerunner.
+
 In this example, outputStream.toString() contains the output of our test.
 
-### Example for Javascript
+</p>
+</details>
+
+<details>
+  <summary>Example for Javascript </summary>
+  <p>
 
 For javascript we do more or less the same as for java. As javascript allows to overwrite any function, we will use this to overwrite the log function.
 
@@ -96,7 +105,7 @@ function runGame(){
     return result;
 }
 
-it("should allow to control the output", function() {
+it("should allow to capture the output", function() {
     var result = runGame();
     console.log("This is the result");
     console.log(result);
@@ -104,12 +113,16 @@ it("should allow to control the output", function() {
 ```
 
 Run the test typing `npm test` in the command line. The result comes back from the runGame function. 
+</p>
+</details>
 
 ## Step: Make the tests reproducible
 
 The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
 
-### Control randomness in Java
+<details>
+  <summary>Control randomness in Java </summary>
+  <p>
 
 Java provides a way to do this, namely by passing a seed to random. Using this seed will produce the same sequence of random numbers every time.
 
@@ -148,8 +161,12 @@ public class GoldenMasterTests {
 ```
 
 It is not a real test yet (no asserts), but at least it allows us to easily run the game and have a reproducible output. 
+</p>
+</details>
 
-### Control randomness in Javascript
+<details>
+  <summary>Control randomness in Javascript </summary>
+  <p> 
 
 As javascript allows to *"overwrite"* any function, we will use another trick to control randomness (described [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random)). The trick is to overwrite the `Math.random` function to allow using a seed.
 
@@ -176,6 +193,8 @@ it("should allow to control the output", function() {
     console.log(result);
 });
 ```
+</p>
+</details>
 
 ## Step: Verify the result with a golden master
 
