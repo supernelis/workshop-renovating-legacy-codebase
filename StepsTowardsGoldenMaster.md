@@ -2,12 +2,18 @@
 
 The goal of the first part of the workshop is for you to build up an effective golden master. There are several important steps to get there.
 
-1. Understand what to observe
-2. Capture the output
-3. Make the tests reproducible
-4. Verify the result with a golden master
-5. Check if the golden master is effective
-6. Add more variations
+1. Get the code
+2. Understand what to observe
+3. Capture the output
+4. Make the tests reproducible
+5. Verify the result with a golden master
+6. Check if the golden master is effective
+7. Add more variations
+
+## Step: Get the code
+
+Clone the repository https://github.com/MatteoPierro/trivia.git and checkout the branch `workshop-starting-point`.
+Move inside the java or the javascript folder depending on which language you want to use.
 
 ## Step: Understand what to observe
 
