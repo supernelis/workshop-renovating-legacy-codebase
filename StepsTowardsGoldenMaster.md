@@ -18,6 +18,8 @@ The first step in building up an effective golden master is to understand what t
   <p> Run the main in GameRunner. Study the console output.</p>
 </details>
 
+<p/>
+
 <details>
   <summary>In Javascript </summary>
   <p>Run 'npm install' once, then open a node shell in the root of the project and execute gamerunner function.
@@ -46,7 +48,6 @@ You can try for yourselves, or look to our examples below.
   <p>
 
 Java provides a way to capture the console output. The trick is to define your own stream, and overwrite the `System.out` stream with the one you control. Typically we add a helper method in a test. So setup:
-
 
 ```java
 public class GoldenMasterTest {
@@ -81,6 +82,8 @@ In this example, outputStream.toString() contains the output of our test.
 
 </p>
 </details>
+
+<p/>
 
 <details>
   <summary>Example for Javascript </summary>
@@ -164,6 +167,8 @@ It is not a real test yet (no asserts), but at least it allows us to easily run 
 </p>
 </details>
 
+<p/>
+
 <details>
   <summary>Control randomness in Javascript </summary>
   <p> 
@@ -219,6 +224,8 @@ public void can_run_a_controlled_game() {
   
   </p>
 </details>
+
+<p/>
 
 <details>
   <summary>In Javascript </summary>
@@ -280,6 +287,8 @@ Now run the coverage report of InteliJ.
 </p>
 </details>
 
+<p/>
+
 <details>
   <summary>Java/Maven</summary>
   <p>
@@ -295,8 +304,10 @@ Next you can open the file `target/site/jacoco/index.html` containing the covera
 </p>
 </details>
 
+<p/>
+
 <details>
-  <summary> Javascript</summary>
+  <summary>Javascript</summary>
   <p>
 
 We configured `npm test` to also produce a coverage report. 
@@ -306,7 +317,7 @@ Next you can open the file at `coverage/index.html`
 </p>
 </details>
 
-**Which parts of the code are not coverd yet? Why?** 
+**Which parts of the code are not coverd yet? Why?**
 
 ### Use mutation testing
 
@@ -314,11 +325,23 @@ The idea behind the mutation testing is that the mutation testing tool produces 
 
 We already configured maven to run the mutation testing easily.
 
+
+<details>
+  <summary>Java</summary>
+  <p>
 ```bash
 mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
 ```
 
 If you open the browser and go to: the html report `target/pit-reports/<a date here>/index.html`
+</p>
+</details>
+
+<p/>
+
+<details>
+  <summary>Javascript</summary>
+  <p>
 
 We also configured npm to run mutation tests.
 
@@ -327,6 +350,8 @@ npm run mutation-test
 ```
 
 The report can be found on `reports/mutation/html/index.html`.
+</p>
+</details>
 
 **Which mutants survived? Why?**
 
@@ -344,7 +369,9 @@ There are two ways to add more variation in the golden master tests. You can add
 
 **Play a bit with the combinations until you get most mutants killed!**
 
-### Tips for Java
+<details>
+  <summary>Tips for Java</summary>
+  <p>
 
 To add multiple seeds you can use `Approvals.verifyAll()` where you can indicate you want to run re-run the test for each of the seeds.
 
@@ -450,8 +477,14 @@ public void can_run_controlled_game_for_multiple_players() throws Exception {
     CombinationApprovals.verifyAllCombinations(this::runGameForSeedAndPlayers, seeds, playerCombinations);
 }
 ```
+</p>
+</details>
 
-### Tips for Javascript
+<p/>
+
+<details>
+  <summary>Tips for Javascript</summary>
+  <p>
 
 First, lets make it easy to run with several players without screwing up the existing code. We start in the gamerunner.js file.
 
@@ -508,6 +541,10 @@ it("2 players", function () {
 ```
 
 The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write our the tests yourself.
+</p>
+</details>
+
+<p/>
 
 <details>
   <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
