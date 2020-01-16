@@ -335,6 +335,7 @@ We already configured maven to run the mutation testing easily.
 <details>
   <summary>Java</summary>
   <p>
+    
 ```bash
 mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
 ```
