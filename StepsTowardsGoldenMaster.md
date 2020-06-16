@@ -24,11 +24,26 @@ The first step in building up an effective golden master is to understand what t
   <summary>In Javascript </summary>
   <p>Run 'npm install' once, then open a node shell in the root of the project and execute gamerunner function.
 
-```javascript
+```bash
 $ npm install
 $ node
 > require('./src/game-runner')()
 ```
+</p>
+</details>
+
+<p/>
+
+<details>
+  <summary>In Swift </summary>
+  <p>Ensure muter is installed. [More information](https://github.com/muter-mutation-testing/muter#installation).
+
+  ```bash
+$ brew install muter-mutation-testing/formulae/muter
+  ```
+
+Open the workspace in XCode and run the target 
+
 </p>
 </details>
 
