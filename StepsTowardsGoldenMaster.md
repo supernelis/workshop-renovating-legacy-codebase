@@ -134,6 +134,49 @@ Run the test typing `npm test` in the command line. The result comes back from t
 </p>
 </details>
 
+<p/>
+
+<details>
+  <summary>Example for Swift </summary>
+  <p>
+Add the following code:
+
+```swift
+// ConsolePrinter.swift
+
+public protocol Printer {
+    func output(_ items: CustomStringConvertible...)
+}
+
+public class ConsolePrinter: Printer {
+    public func output(_ items: CustomStringConvertible...){
+        print(items.map{$0.description}.joined(separator: " "))
+    }
+}
+```
+Add the following code in Game.swift
+
+```swift
+
+    private var printer: Printer = ConsolePrinter()
+    
+    public convenience init(printer: Printer){
+        self.init()
+        self.printer = printer
+    }
+```
+
+We add a convenience init because ...
+
+
+Replace all ```print(```with ```printer.output(```.
+
+At the end, run your application and see that the output still appears correctly.
+
+</p>
+</details>
+
+
 ## Step: Make the tests reproducible
 
 The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
