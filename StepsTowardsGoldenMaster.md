@@ -48,8 +48,11 @@ $ node
 $ brew install muter-mutation-testing/formulae/muter
   ```
 
-Open the workspace in XCode and run the target 
+Open the workspace in XCode and run the target. You also have the option to run this on the commandline:
 
+```bash
+$ muter
+```
 </p>
 </details>
 
@@ -172,13 +175,49 @@ Add the following code in Game.swift
     }
 ```
 
-We add a convenience init because ...
+We add a convenience init to avoid modifying the main.swift file. 
+Next we replace all ```print(```with ```printer.output(```. Then run your application and see that the output still appears correctly.
 
+Next we have to change the main to allow for a testrun with a printer we can control from the tests:
 
-Replace all ```print(```with ```printer.output(```.
+```swift
 
-At the end, run your application and see that the output still appears correctly.
+func play(
+    aGame: Game = Game()
+) {
+   // all code that is in main
+    
+}
 
+play()
+
+```
+
+Next we add a test that captures the output:
+
+```swift
+// in file TriviaTests.swift
+
+    func test_captureOutput() {
+        let printer = StringPrinter()
+        let game = Game(printer: printer)
+        
+        play(aGame: game)
+        
+        XCTAssertEqual("",printer.text)
+    }
+
+class StringPrinter: Printer {
+    private(set) var text = ""
+    
+    func output(_ items: CustomStringConvertible...) {
+        text += items.map{$0.description}.joined(separator: " ") + "\n"
+    }
+}
+
+```
+
+This test will still fail (the output does not equal ""), but we need to fix something first before we can make it succeed (see next step).
 </p>
 </details>
 
@@ -262,6 +301,86 @@ it("should allow to control the output", function() {
     console.log(result);
 });
 ```
+</p>
+</details>
+
+</p>
+
+<details>
+  <summary>Control randomness in Swift </summary>
+  <p> 
+
+We need to extract the random number generation. We do this by adding the following file:
+
+```swift 
+// Add a class RandomGenerator.swift with the following implementation
+import Foundation
+
+protocol RandomGenerator {
+    func number(from: Int, until: Int) -> Int
+}
+
+class RealRandomGenerator: RandomGenerator {
+    func number(from: Int = 0, until: Int) -> Int {
+        Int.random(in: from ..< until)
+    }
+}
+```
+
+Next alter the following lines in the main:
+
+```swift
+func play(
+    random: RandomGenerator = RealRandomGenerator(),
+    aGame: Game = Game()
+) {
+
+//...
+        aGame.roll(roll: random.number(from: 1, until: 5))
+        
+        if (random.number(from: 0, until: 9) == 7) {
+//...
+
+}
+```
+
+Run the main and see that this still produces an output.
+
+Next you can add the following class to your TriviaTests.swift:
+
+```swift
+
+class MockRandomGenerator: RandomGenerator {
+
+    var until5List = [2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5]
+    
+    var until9List = [0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2]
+    
+    func number(from: Int, until: Int) -> Int {
+        if( until == 5){
+            return  until5List.popLast()!
+        }
+        
+        return until9List.popLast()!
+    }
+```
+
+It is a (dirty) hack to control the random number generation and make it predictable for the tests.
+
+Next change your play met test to use the mock random:
+
+```swift
+        func test_reproduceableOutput() {
+        let printer = StringPrinter()
+        let random = MockRandomGenerator()
+        let game = Game(printer: printer)
+        
+        play(random: random, aGame: game)
+        
+        XCTAssertEqual("",printer.text)
+    }
+```
+
 </p>
 </details>
 
