@@ -17,8 +17,6 @@ run your test with full coverage. You should have 100% of test coverage.
 
 ## Run mutation testing
 
-Check that you are running java version 8.
-
 ```bash
 $ mvn clean test -DwithHistory org.pitest:pitest-maven:mutationCoverage
 ```
