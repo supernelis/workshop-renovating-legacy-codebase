@@ -36,17 +36,7 @@ $ node
 
 <details>
   <summary>In Swift </summary>
-  <p>Ensure muter is installed. [More information](https://github.com/muter-mutation-testing/muter#installation).
-
-  ```bash
-$ brew install muter-mutation-testing/formulae/muter
-  ```
-
-Open the workspace in XCode and run the target. You also have the option to run this on the commandline:
-
-```bash
-$ muter
-```
+  <p>Open the project and run the main. Study the console output.
 </p>
 </details>
 
@@ -527,6 +517,22 @@ npm run mutation-test
 ```
 
 The report can be found on `reports/mutation/html/index.html`.
+</p>
+</details>
+
+<details>
+  <summary>In Swift </summary>
+  <p>Ensure muter is installed. [More information](https://github.com/muter-mutation-testing/muter#installation).
+
+  ```bash
+$ brew install muter-mutation-testing/formulae/muter
+  ```
+
+Open the workspace in XCode and run the target. You also have the option to run this on the commandline:
+
+```bash
+$ muter
+```
 </p>
 </details>
 
