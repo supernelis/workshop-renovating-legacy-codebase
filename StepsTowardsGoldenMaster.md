@@ -143,8 +143,7 @@ Add a protocol and class that allows to extract the print function. Later we wil
 More concretely, you could add a Console printer and adapt the Game class as shown below.
 
 ```swift
-// ConsolePrinter.swift
-
+// Add a file ConsolePrinter.swift with the following implementation
 public protocol Printer {
     func output(_ items: CustomStringConvertible...)
 }
@@ -158,7 +157,7 @@ public class ConsolePrinter: Printer {
 Add the following code in Game.swift
 
 ```swift
-
+    // Add to file Game.swift
     private var printer: Printer = ConsolePrinter()
     
     public convenience init(printer: Printer){
@@ -173,6 +172,7 @@ Next we replace all ```print(```with ```printer.output(```. Then run your applic
 Next we have to change the main to allow for a testrun with a printer we can control from the tests:
 
 ```swift
+// Replace main.swift with the code below
 
 func play(
     aGame: Game = Game()
@@ -207,7 +207,7 @@ Run it again and verify that the output appears correctly.
 Next we add a test that captures the output:
 
 ```swift
-// in file TriviaTests.swift
+// Add in file TriviaTests.swift, and cleanup unused functions
 
     func test_captureOutput() {
         let printer = StringPrinter()
@@ -321,13 +321,15 @@ it("should allow to control the output", function() {
   <summary>Control randomness in Swift </summary>
   <p> 
 
-We need to extract the random number generation. We do this by adding the following file:
+Swift does not make our life easy control the random number generation. 
+
+We need to extract the random number generation. We do this by adding a new protocol and class that generate the random numbers.
 
 ```swift 
 // Add a class RandomGenerator.swift with the following implementation
 import Foundation
 
-protocol RandomGenerator {
+public protocol RandomGenerator {
     func number(from: Int, until: Int) -> Int
 }
 
@@ -341,6 +343,8 @@ class RealRandomGenerator: RandomGenerator {
 Next alter the following lines in the main:
 
 ```swift
+// Alter main.swift
+
 func play(
     random: RandomGenerator = RealRandomGenerator(),
     aGame: Game = Game()
@@ -357,10 +361,10 @@ func play(
 
 Run the main and see that this still produces an output.
 
-Next you can add the following class to your TriviaTests.swift:
+Next we will add a mock random generator that uses a fixed set of random numbers. We generated them on https://www.random.org/integers/. 
 
 ```swift
-
+// Add to TriviaTests.swift
 class MockRandomGenerator: RandomGenerator {
 
     var until5List = [2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5]
@@ -374,6 +378,7 @@ class MockRandomGenerator: RandomGenerator {
         
         return until9List.popLast()!
     }
+}
 ```
 
 It is a (dirty) hack to control the random number generation and make it predictable for the tests.
@@ -381,7 +386,7 @@ It is a (dirty) hack to control the random number generation and make it predict
 Next change your play met test to use the mock random:
 
 ```swift
-        func test_reproduceableOutput() {
+    func test_reproduceableOutput() {
         let printer = StringPrinter()
         let random = MockRandomGenerator()
         let game = Game(printer: printer)
@@ -391,6 +396,8 @@ Next change your play met test to use the mock random:
         XCTAssertEqual("",printer.text)
     }
 ```
+
+We are ready with making the test reproducible. You can run the tests a few time and you will see that it produces the same output every time.
 
 </p>
 </details>
