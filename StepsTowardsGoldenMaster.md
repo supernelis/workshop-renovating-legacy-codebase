@@ -138,7 +138,9 @@ Run the test typing `npm test` in the command line. The result comes back from t
 <details>
   <summary>Example for Swift </summary>
   <p>
-Add the following code:
+Add a protocol and class that allows to extract the print function. Later we will make a test version that captures this in a string, but for now it can still just print to the console output. 
+
+More concretely, you could add a Console printer and adapt the Game class as shown below.
 
 ```swift
 // ConsolePrinter.swift
@@ -175,13 +177,32 @@ Next we have to change the main to allow for a testrun with a printer we can con
 func play(
     aGame: Game = Game()
 ) {
-   // all code that is in main
-    
+
+    var notAWinner: Bool
+    _ = aGame.add(playerName: "Chet")
+    _ = aGame.add(playerName: "Pat")
+    _ = aGame.add(playerName: "Sue")
+
+    repeat {
+        
+        aGame.roll(roll: Int(arc4random_uniform(5)) + 1)
+        
+        if (Int(arc4random_uniform(9)) == 7) {
+            notAWinner = aGame.wrongAnswer()
+        } else {
+            notAWinner = aGame.wasCorrectlyAnswered()
+        }
+        
+        
+        
+    } while (notAWinner)
 }
 
 play()
 
 ```
+
+Run it again and verify that the output appears correctly. 
 
 Next we add a test that captures the output:
 
@@ -207,7 +228,7 @@ class StringPrinter: Printer {
 
 ```
 
-This test will still fail (the output does not equal ""), but we need to fix something first before we can make it succeed (see next step).
+We are not ready with our preparation to capture the output. This test will still fail (the output does not equal ""), but we need to fix something first before we can make it succeed (see next step).
 </p>
 </details>
 
