@@ -391,7 +391,7 @@ Next change your play met test to use the mock random:
     }
 ```
 
-We are ready with making the test reproducible. You can run the tests a few time and you will see that it produces the same output every time.
+We are ready with making the test reproducible. You can run the tests a few time and you will see that it produces the same output every time. Tests still fail for now, as we have an empty expected value. Lets fix that next.
 
 </p>
 </details>
@@ -456,6 +456,16 @@ TIP for javascript: you can select an automated mere tool by changing the [repor
 
 On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can rename the received file to the approved file and run the tests again.
 
+<details>
+  <summary>In Swift </summary>
+  <p>
+    With Swift we are out of luck. The approval test library exists and we made a version where we use it, but it fails to work together with mutation testing. So we have to make our own golden master implementation. 
+
+    ***TODO ANGEL***
+    
+  </p>
+</details>
+
 ## Step: Check the quality of your tests
 
 Now we have a golden master test but we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
@@ -512,6 +522,18 @@ Next you can open the file at `coverage/index.html`
 </p>
 </details>
 
+<p/>
+
+<details>
+  <summary>Swift</summary>
+  <p>
+
+*** TODO ANGEL ***
+
+</p>
+</details>
+
+
 **Which parts of the code are not coverd yet? Why?**
 
 ### Use mutation testing
@@ -547,6 +569,8 @@ npm run mutation-test
 The report can be found on `reports/mutation/html/index.html`.
 </p>
 </details>
+
+<p/>
 
 <details>
   <summary>In Swift </summary>
@@ -757,6 +781,17 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
 
 <p/>
 
+
+<details>
+  <summary>Tips for swift</summary>
+  <p>
+
+*** TODO ANGEL ***
+
+</p>
+</details>
+
+<p/>
 <details>
   <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
   <p>
