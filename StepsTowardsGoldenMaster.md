@@ -465,11 +465,23 @@ On the first run the test will still fail, as it lacks an approved version with 
 <details>
   <summary>In Swift </summary>
   <p>
-    With Swift we are out of luck. The approval test library exists and we made a version where we use it, but it fails to work together with mutation testing. So we have to make our own golden master implementation. 
+    With Swift we are out of luck. The approval test library exists and we made a version where we use it, but it fails to work together with mutation testing. So we have to make our own golden master implementation.<br/>
+    In order to fetch the output of your Golden Master, in Xcode open the tab "Reports" and select the failed unit test. You will find the expected output.
+   </p>
 
-    ***TODO ANGEL***
-    
-  </p>
+<img src="./images/golden-master.png"/>
+
+<p>Copy the expected output and add it to a variable:  </p>
+
+```swift
+
+        var goldenMaster = """
+
+        ... Add your golden master here ...    
+
+        """
+```
+<p> Make sure you dont have extra lines.</p>
 </details>
 
 ## Step: Check the quality of your tests
@@ -533,8 +545,18 @@ Next you can open the file at `coverage/index.html`
 <details>
   <summary>Swift</summary>
   <p>
+    When your test succeed, verify the coverage. <br/>
+    Make sure you have Code Coverage Option active for your schema:
+</p>
 
-*** TODO ANGEL ***
+<img src="./images/activate-coverage.png">
+<p>
+    Run your tests again and verify the code coverage from the tab "Reports" in Xcode
+</p>
+
+<img src="./images/coverage.png">
+
+<p> Should be more than 90% </p>
 
 </p>
 </details>
@@ -791,11 +813,13 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
 
 <details>
   <summary>Tips for swift</summary>
-  <p>
-
-*** TODO ANGEL ***
-
-</p>
+  <p>In order to kill all the mutants try this options:</p>
+  
+    - Generate a nuw random number list
+    - Increase the number of game
+    - Increase the number of players
+    
+  <p>Remember that you have to create a new golder master after any modification of the test.</p>
 </details>
 
 <p/>
