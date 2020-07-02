@@ -30,11 +30,19 @@ The first step in building up an effective golden master is to understand what t
   <summary>In Javascript </summary>
   <p>Run 'npm install' once, then open a node shell in the root of the project and execute gamerunner function.
 
-```javascript
+```bash
 $ npm install
 $ node
 > require('./src/game-runner')()
 ```
+</p>
+</details>
+
+<p/>
+
+<details>
+  <summary>In Swift </summary>
+  <p>Open the project and run the main. Study the console output.
 </p>
 </details>
 
@@ -125,6 +133,106 @@ Run the test typing `npm test` in the command line. The result comes back from t
 </p>
 </details>
 
+<p/>
+
+<details>
+  <summary>Example for Swift </summary>
+  <p>
+Add a protocol and class that allows to extract the print function. Later we will make a test version that captures this in a string, but for now it can still just print to the console output. 
+
+More concretely, you could add a Console printer and adapt the Game class as shown below.
+
+```swift
+// Add a file ConsolePrinter.swift with the following implementation
+public protocol Printer {
+    func output(_ items: CustomStringConvertible...)
+}
+
+public class ConsolePrinter: Printer {
+    public func output(_ items: CustomStringConvertible...){
+        print(items.map{$0.description}.joined(separator: " "))
+    }
+}
+```
+Add the following code in Game.swift
+
+```swift
+    // Add to file Game.swift
+    private var printer: Printer = ConsolePrinter()
+    
+    public convenience init(printer: Printer){
+        self.init()
+        self.printer = printer
+    }
+```
+
+We add a convenience init to avoid modifying the main.swift file. 
+Next we replace all ```print(```with ```printer.output(```. Then run your application and see that the output still appears correctly.
+
+Next we have to change the main to allow for a testrun with a printer we can control from the tests:
+
+```swift
+// Replace main.swift with the code below
+
+func play(
+    aGame: Game = Game()
+) {
+
+    var notAWinner: Bool
+    _ = aGame.add(playerName: "Chet")
+    _ = aGame.add(playerName: "Pat")
+    _ = aGame.add(playerName: "Sue")
+
+    repeat {
+        
+        aGame.roll(roll: Int(arc4random_uniform(5)) + 1)
+        
+        if (Int(arc4random_uniform(9)) == 7) {
+            notAWinner = aGame.wrongAnswer()
+        } else {
+            notAWinner = aGame.wasCorrectlyAnswered()
+        }
+        
+        
+        
+    } while (notAWinner)
+}
+
+play()
+
+```
+
+Run it again and verify that the output appears correctly. 
+
+Next we add a test that captures the output:
+
+```swift
+// Add in file TriviaTests.swift, and cleanup unused functions
+
+    func test_captureOutput() {
+        let printer = StringPrinter()
+        let game = Game(printer: printer)
+        
+        play(aGame: game)
+        
+        XCTAssertEqual("",printer.text)
+    }
+
+class StringPrinter: Printer {
+    private(set) var text = ""
+    
+    func output(_ items: CustomStringConvertible...) {
+        text += items.map{$0.description}.joined(separator: " ") + "\n"
+    }
+}
+
+```
+
+We are not ready with our preparation to capture the output. This test will still fail (the output does not equal ""), but we need to fix something first before we can make it succeed (see next step).
+</p>
+</details>
+
+
 ## Step: Make the tests reproducible
 
 The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
@@ -207,6 +315,93 @@ it("should allow to control the output", function() {
 </p>
 </details>
 
+</p>
+
+<details>
+  <summary>Control randomness in Swift </summary>
+  <p> 
+
+Swift does not make our life easy control the random number generation. 
+
+We need to extract the random number generation. We do this by adding a new protocol and class that generate the random numbers.
+
+```swift 
+// Add a class RandomGenerator.swift with the following implementation
+import Foundation
+
+public protocol RandomGenerator {
+    func number(from: Int, until: Int) -> Int
+}
+
+class RealRandomGenerator: RandomGenerator {
+    func number(from: Int = 0, until: Int) -> Int {
+        Int.random(in: from ..< until)
+    }
+}
+```
+
+Next alter the following lines in the main:
+
+```swift
+// Alter main.swift
+
+func play(
+    random: RandomGenerator = RealRandomGenerator(),
+    aGame: Game = Game()
+) {
+
+//...
+        aGame.roll(roll: random.number(from: 1, until: 5))
+        
+        if (random.number(from: 0, until: 9) == 7) {
+//...
+
+}
+```
+
+Run the main and see that this still produces an output.
+
+Next we will add a mock random generator that uses a fixed set of random numbers. We generated them on https://www.random.org/integers/. 
+
+```swift
+// Add to TriviaTests.swift
+class MockRandomGenerator: RandomGenerator {
+
+    var until5List = [2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,3,3,5,3,2,5,1,3,2,1,3,3,5,5,5,1,1,1,2,5,4,2,2,1,2,3,4,1,1,2,2,2,3,5,4,2,1,2,4,3,3,2,1,2,5,1,3,3,5,1,4,3,1,3,1,1,1,3,4,3,4,3,1,3,3,4,2,5,3,3,2,2,4,4,1,3,2,1,5,3,1,5,4,3,1,5,5,1,3,4,4,1,4,5,3,2,3,5,5,1,3,3,5,3,2,5,1,3,2,1,3,3,5]
+    
+    var until9List = [0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,0,1,5,4,6,6,3,0,6,6,2,4,1,2,4,0,7,3,3,5,5,1,7,7,0,0,6,0,3,3,8,5,5,1,2,3,6,2,5,0,5,1,8,5,1,8,0,7,2,7,7,6,2,0,6,1,0,8,7,3,7,4,4,5,8,6,2,0,1,6,0,0,1,5,8,3,4,4,1,5,8,0,4,2,6,5,6,0,4,8,3,3,1,8,5,5,1,2,7,8,0,1,5,4,6,6,3,0,6,6,2,4,1,2]
+    
+    func number(from: Int, until: Int) -> Int {
+        if( until == 5){
+            return  until5List.popLast()!
+        }
+        
+        return until9List.popLast()!
+    }
+}
+```
+
+It is a (dirty) hack to control the random number generation and make it predictable for the tests.
+
+Next change your play met test to use the mock random:
+
+```swift
+    func test_reproduceableOutput() {
+        let printer = StringPrinter()
+        let random = MockRandomGenerator()
+        let game = Game(printer: printer)
+        
+        play(random: random, aGame: game)
+        
+        XCTAssertEqual("",printer.text)
+    }
+```
+
+We are ready with making the test reproducible. You can run the tests a few time and you will see that it produces the same output every time. Tests still fail for now, as we have an empty expected value. Lets fix that next.
+
+</p>
+</details>
+
 ## Step: Verify the result with a golden master
 
 As we now have a reproducible output to compare, we still need to do the actual comparison. We could write something ourselves, but actually there is a great tool to use in this context called [Approval Tests](http://approvaltests.com/). 
@@ -267,6 +462,28 @@ TIP for javascript: you can select an automated mere tool by changing the [repor
 
 On the first run the test will still fail, as it lacks an approved version with the correct content. If you are sure this is the version you want to start from you can rename the received file to the approved file and run the tests again.
 
+<details>
+  <summary>In Swift </summary>
+  <p>
+    With Swift we are out of luck. The approval test library exists and we made a version where we use it, but it fails to work together with mutation testing. So we have to make our own golden master implementation.<br/>
+    In order to fetch the output of your Golden Master, in Xcode open the tab "Reports" and select the failed unit test. You will find the expected output.
+   </p>
+
+<img src="./images/golden-master.png"/>
+
+<p>Copy the expected output and add it to a variable:  </p>
+
+```swift
+
+        var goldenMaster = """
+
+        ... Add your golden master here ...    
+
+        """
+```
+<p> Make sure you dont have extra lines.</p>
+</details>
+
 ## Step: Check the quality of your tests
 
 Now we have a golden master test but we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
@@ -323,6 +540,28 @@ Next you can open the file at `coverage/index.html`
 </p>
 </details>
 
+<p/>
+
+<details>
+  <summary>Swift</summary>
+  <p>
+    When your test succeed, verify the coverage. <br/>
+    Make sure you have Code Coverage Option active for your schema:
+</p>
+
+<img src="./images/activate-coverage.png">
+<p>
+    Run your tests again and verify the code coverage from the tab "Reports" in Xcode
+</p>
+
+<img src="./images/coverage.png">
+
+<p> Should be more than 90% </p>
+
+</p>
+</details>
+
+
 **Which parts of the code are not coverd yet? Why?**
 
 ### Use mutation testing
@@ -357,6 +596,24 @@ npm run mutation-test
 ```
 
 The report can be found on `reports/mutation/html/index.html`.
+</p>
+</details>
+
+<p/>
+
+<details>
+  <summary>In Swift </summary>
+  <p>Ensure muter is installed. [More information](https://github.com/muter-mutation-testing/muter#installation).
+
+  ```bash
+$ brew install muter-mutation-testing/formulae/muter
+  ```
+
+Open the workspace in XCode and run the target. You also have the option to run this on the commandline:
+
+```bash
+$ muter
+```
 </p>
 </details>
 
@@ -553,6 +810,19 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
 
 <p/>
 
+
+<details>
+  <summary>Tips for swift</summary>
+  <p>In order to kill all the mutants try this options:</p>
+  
+    - Generate a new random number list
+    - Increase the number of games
+    - Increase the number of players per game
+    
+  <p>Remember that you have to create a new golder master after any modification of the test.</p>
+</details>
+
+<p/>
 <details>
   <summary>Click to see a hint what to add to kill the maximum amount of mutants </summary>
   <p>
