@@ -815,9 +815,9 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
   <summary>Tips for swift</summary>
   <p>In order to kill all the mutants try this options:</p>
   
-    - Generate a nuw random number list
-    - Increase the number of game
-    - Increase the number of players
+    - Generate a new random number list
+    - Increase the number of games
+    - Increase the number of players per game
     
   <p>Remember that you have to create a new golder master after any modification of the test.</p>
 </details>
