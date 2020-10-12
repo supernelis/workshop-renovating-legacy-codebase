@@ -12,12 +12,12 @@ The goal of the first part of the workshop is for you to build up an effective g
 
 ## Step: Get the code
 
-Clone the repository https://github.com/MatteoPierro/trivia.git and checkout the branch `workshop-starting-point`.
+Clone the repository https://github.com/MatteoPierro/trivia.git and check out the branch `workshop-starting-point`.
 Move inside the java or the javascript folder depending on which language you want to use.
 
 ## Step: Understand what to observe
 
-The first step in building up an effective golden master is to understand what to observe. So lets start with *running the game*. Run the game several times. Briefly study the code of the GameRunner.
+The first step in building up an effective golden master is to understand what to observe. So let's start with *running the game*. Run the game several times. Briefly study the code of the GameRunner.
 
 <details>
   <summary>In Java </summary>
@@ -53,7 +53,7 @@ $ node
 
 ## Step: Capture the output
 
-One thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare the your output with the golden master in this case?
+One thing to notice when studying the program is that the only feedback you get is on the console output. So how can you compare your output with the golden master in this case?
 
 You can try for yourselves, or look to our examples below.
 
@@ -235,7 +235,7 @@ We are not ready with our preparation to capture the output. This test will stil
 
 ## Step: Make the tests reproducible
 
-The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testible, it is needed to control the randomness in the tests (so it is only really random in the production code).
+The GameRunner uses a random number generator, causing the output of a run to differ every time. In this way it will be very hard to capture the output and compare it to the golden master, as every output will be different. To make such code testable, it is needed to control the randomness in the tests (so it is only really random in the production code).
 
 <details>
   <summary>Control randomness in Java </summary>
@@ -406,7 +406,7 @@ We are ready with making the test reproducible. You can run the tests a few time
 
 As we now have a reproducible output to compare, we still need to do the actual comparison. We could write something ourselves, but actually there is a great tool to use in this context called [Approval Tests](http://approvaltests.com/). 
 
-The essense of ApprovalTests is that it will keep track of golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version.
+The essence of ApprovalTests is that it will keep track of the golden master (called the approved version) and will compare the output of a testrun (called the received version) with the golden master. If you made functional changes that change the output, you are supposed to check it manually and upgrade the received to the approved version.
 
 The simplest way is to add a simple verify step.
 
@@ -486,7 +486,7 @@ On the first run the test will still fail, as it lacks an approved version with 
 
 ## Step: Check the quality of your tests
 
-Now we have a golden master test but we still need to check if it is effective. ***For this we are mainly intested in the Game class***. This is done in two steps:
+Now we have a golden master test but we still need to check if it is effective. ***For this we are mainly interested in the Game class***. This is done in two steps:
 
 * Check the code coverage.
 * Use mutation testing
@@ -505,7 +505,7 @@ Click on your build configuration for test -> Edit Configuration -> Code coverag
 
 There you also need to add `com.adaptionsoft.games.uglytrivia.*` to the "Packages and classes to include in coverage data".
 
-Now run the coverage report of InteliJ.
+Now run the coverage report of IntelliJ.
 
 </p>
 </details>
@@ -516,7 +516,7 @@ Now run the coverage report of InteliJ.
   <summary>Java/Maven</summary>
   <p>
 
- Using commandline maven is another possibility that we configured for you. We use a maven plugin for this. Please execute the following command:
+Using a command-line maven is another possibility that we configured for you. We use a maven plugin for this. Please execute the following command:
 
 ```bash
 mvn clean test jacoco:report
@@ -562,7 +562,7 @@ Next you can open the file at `coverage/index.html`
 </details>
 
 
-**Which parts of the code are not coverd yet? Why?**
+**Which parts of the code are not covered yet? Why?**
 
 ### Use mutation testing
 
@@ -609,7 +609,7 @@ The report can be found on `reports/mutation/html/index.html`.
 $ brew install muter-mutation-testing/formulae/muter
   ```
 
-Open the workspace in XCode and run the target. You also have the option to run this on the commandline:
+Open the workspace in XCode and run the target. You also have the option to run this on the command line:
 
 ```bash
 $ muter
@@ -694,7 +694,7 @@ public class GameRunner {
 }
 ```
 
-After that we need to make changes to the tests. Because approval tests relies on toString of the players to see which variation it is running, we cannot directly use a string array to test. That is why we make the Players object.
+After that we need to make changes to the tests. Because approval tests rely on toString of the players to see which variation it is running, we cannot directly use a string array to test. That is why we make the Players object.
 
 ```java
 private class Players {
@@ -750,7 +750,7 @@ public void can_run_controlled_game_for_multiple_players() throws Exception {
   <summary>Tips for Javascript</summary>
   <p>
 
-First, lets make it easy to run with several players without screwing up the existing code. We start in the gamerunner.js file.
+First, let's make it easy to run with several players without screwing up the existing code. We start in the gamerunner.js file.
 
 ```javascript
 module.exports = function (players=['Chet', 'Pat', 'Sue']) {
@@ -804,7 +804,7 @@ it("2 players", function () {
 
 ```
 
-The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write our the tests yourself.
+The javascript library does not have the fancy verifyAll or VerifyAllCombinations. You will have to write the tests yourself.
 </p>
 </details>
 
@@ -829,7 +829,7 @@ The javascript library does not have the fancy verifyAll or VerifyAllCombination
 
   Through experimentation and studying the code we found  that 0 till 6 players and specific seeds kills the maximal amount of mutants. The java seeds are 3 and 5. Javascript seeds are 3, 5, 7, 77.
 
-  Even with approval testing with all combinations you will probably not be able to cover `for (int i = 0; i < 50; i++) {`. As it is in the initialisation of the questions, lets ignore it for now.  
+  Even with approval testing with all combinations you will probably not be able to cover `for (int i = 0; i < 50; i++) {`. As it is in the initialisation of the questions, let's ignore it for now.  
 
   And for javascript mutation testing, Array(6) does not differ from Array(), as all Arrays are unlimited. It is safe to ignore.
   
